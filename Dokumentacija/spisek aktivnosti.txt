@@ -1,0 +1,18 @@
+Tu je samo seznam aktivnosti, ki jih je treba potem v predlogu bolj podrobno opisat:
+
+- Izdelava grafiènega vmesnika:
+	× zemljevid
+	× seznam trgovin
+	× seznam kategorij
+	× ikone
+	× iskalnik (?) èe napišeš "big", najde big bang in druge, ki to 		vsebujejo?
+- izdelave podatkovne baze (vseh trgovin v vseh halah) ?
+	× trgovine-> hale
+	× kategorije -> trgovine
+- povezava med GUI in podatkovno bazo
+
+
+Obvezne aktivnosti (sploh ne vem kaj pomenjo)
+- projektno vodenje
+- Ocena in analiza doseganja rezultatov in ciljev
+- Informiranje in promocija
