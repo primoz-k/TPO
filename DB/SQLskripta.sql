@@ -1,6 +1,6 @@
 --==============================================================
 -- DBMS name:      ANSI Level 2
--- Created on:     2.12.2013 20:44:47
+-- Created on:     5.12.2013 0:37:52
 --==============================================================
 
 
@@ -11,6 +11,14 @@ drop table Hala cascade;
 drop index Kategorija_PK;
 
 drop table Kategorija cascade;
+
+drop index prodaja_izdelke_kategorije2_FK;
+
+drop index prodaja_izdelke_kategorije_FK;
+
+drop index prodaja_izdelke_kategorije_PK;
+
+drop table KategorijaTrgovine cascade;
 
 drop index je_vrste_FK;
 
@@ -33,14 +41,6 @@ drop table Vhod cascade;
 drop index VrstaPOI_PK;
 
 drop table VrstaPOI cascade;
-
-drop index prodaja_izdelke_kategorije2_FK;
-
-drop index prodaja_izdelke_kategorije_FK;
-
-drop index prodaja_izdelke_kategorije_PK;
-
-drop table prodaja_izdelke_kategorije cascade;
 
 --==============================================================
 -- Table: Hala
@@ -71,6 +71,62 @@ primary key (IDKategorije)
 -- Index: Kategorija_PK
 --==============================================================
 create unique index Kategorija_PK on Kategorija (
+IDKategorije ASC
+);
+
+--==============================================================
+-- Table: Trgovina
+--==============================================================
+create table Trgovina (
+IDTrgovine           INTEGER              not null,
+IDHale               INTEGER              not null,
+ImeTrgovine          VARCHAR(50)          not null,
+Telefon              VARCHAR(50),
+Email                VARCHAR(50),
+SpletnaStran         VARCHAR(50),
+PonPetOd             TIME                 not null,
+PonPetDo             TIME                 not null,
+SobOd                TIME                 not null,
+SobDo                TIME                 not null,
+NedOd                TIME                 not null,
+NedDo                TIME                 not null,
+primary key (IDTrgovine),
+foreign key (IDHale)
+      references Hala (IDHale)
+);
+
+--==============================================================
+-- Table: KategorijaTrgovine
+--==============================================================
+create table KategorijaTrgovine (
+IDTrgovine           INTEGER              not null,
+IDKategorije         INTEGER              not null,
+primary key (IDTrgovine, IDKategorije),
+foreign key (IDTrgovine)
+      references Trgovina (IDTrgovine),
+foreign key (IDKategorije)
+      references Kategorija (IDKategorije)
+);
+
+--==============================================================
+-- Index: prodaja_izdelke_kategorije_PK
+--==============================================================
+create unique index prodaja_izdelke_kategorije_PK on KategorijaTrgovine (
+IDTrgovine ASC,
+IDKategorije ASC
+);
+
+--==============================================================
+-- Index: prodaja_izdelke_kategorije_FK
+--==============================================================
+create  index prodaja_izdelke_kategorije_FK on KategorijaTrgovine (
+IDTrgovine ASC
+);
+
+--==============================================================
+-- Index: prodaja_izdelke_kategorije2_FK
+--==============================================================
+create  index prodaja_izdelke_kategorije2_FK on KategorijaTrgovine (
 IDKategorije ASC
 );
 
@@ -107,27 +163,6 @@ IDPoi ASC
 --==============================================================
 create  index je_vrste_FK on POI (
 IDVrste ASC
-);
-
---==============================================================
--- Table: Trgovina
---==============================================================
-create table Trgovina (
-IDTrgovine           INTEGER              not null,
-IDHale               INTEGER              not null,
-ImeTrgovine          VARCHAR(50)          not null,
-Telefon              VARCHAR(50),
-Email                VARCHAR(50),
-SpletnaStran         VARCHAR(50),
-PonPetOd             TIME                 not null,
-PonPetDo             TIME                 not null,
-SobOd                TIME                 not null,
-SobDo                TIME                 not null,
-NedOd                TIME                 not null,
-NedDo                TIME                 not null,
-primary key (IDTrgovine),
-foreign key (IDHale)
-      references Hala (IDHale)
 );
 
 --==============================================================
@@ -175,40 +210,5 @@ IDHale ASC
 --==============================================================
 create unique index VrstaPOI_PK on VrstaPOI (
 IDVrste ASC
-);
-
---==============================================================
--- Table: prodaja_izdelke_kategorije
---==============================================================
-create table prodaja_izdelke_kategorije (
-IDTrgovine           INTEGER              not null,
-IDKategorije         INTEGER              not null,
-primary key (IDTrgovine, IDKategorije),
-foreign key (IDTrgovine)
-      references Trgovina (IDTrgovine),
-foreign key (IDKategorije)
-      references Kategorija (IDKategorije)
-);
-
---==============================================================
--- Index: prodaja_izdelke_kategorije_PK
---==============================================================
-create unique index prodaja_izdelke_kategorije_PK on prodaja_izdelke_kategorije (
-IDTrgovine ASC,
-IDKategorije ASC
-);
-
---==============================================================
--- Index: prodaja_izdelke_kategorije_FK
---==============================================================
-create  index prodaja_izdelke_kategorije_FK on prodaja_izdelke_kategorije (
-IDTrgovine ASC
-);
-
---==============================================================
--- Index: prodaja_izdelke_kategorije2_FK
---==============================================================
-create  index prodaja_izdelke_kategorije2_FK on prodaja_izdelke_kategorije (
-IDKategorije ASC
 );
 
