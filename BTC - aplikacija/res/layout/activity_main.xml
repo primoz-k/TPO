@@ -14,4 +14,14 @@
         android:layout_height="wrap_content"
         android:text="Text" />
 
+    <Button
+        android:id="@+id/bt_openTrgovina"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv1"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="104dp"
+        android:text="Odpri trgovina activity" 
+        android:onClick="odpriTrgovino" />
+
 </RelativeLayout>
