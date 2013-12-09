@@ -1,5 +1,7 @@
 package com.fri.tpo.btc;
 
+import java.io.IOException;
+
 import android.os.Bundle;
 import android.app.Activity;
 import android.database.Cursor;
@@ -19,7 +21,8 @@ public class MainActivity extends Activity {
 		tv = (TextView)findViewById(R.id.tv1);
 		
 		db = new DatabaseConnector(this);
-		String data = db.getDataInString();
+		db.startDatabase();
+		String data = db.getData("Select * from Hala");
 	    tv.setText(data);
 	}
 	
