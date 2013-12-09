@@ -1,6 +1,8 @@
 package com.fri.tpo.btc;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 import android.os.Bundle;
 import android.app.Activity;
@@ -21,9 +23,21 @@ public class MainActivity extends Activity {
 		tv = (TextView)findViewById(R.id.tv1);
 		
 		db = new DatabaseConnector(this);
-		db.startDatabase();
-		String data = db.getData("Select * from Hala");
-	    tv.setText(data);
+		
+		
+		
+		//String data = db.getData("Select * from Hala");
+		
+		//HashMap<String, String> hale = db.getHalaInHashMap(1);
+		ArrayList<HashMap<String, String>> vseHale = db.getAllDataFromHala();
+		
+		String izpis="";
+		for(HashMap<String, String> hala:vseHale)
+			izpis+=hala.get("_id").toString()+"->"+hala.get("ImeHale").toString()+"\n";
+			
+		
+	    tv.setText(izpis);
+	    
 	}
 	
 
