@@ -1,6 +1,6 @@
 --==============================================================
 -- DBMS name:      ANSI Level 2
--- Created on:     5.12.2013 0:37:52
+-- Created on:     9.12.2013 14:03:35
 --==============================================================
 
 
@@ -42,12 +42,14 @@ drop index VrstaPOI_PK;
 
 drop table VrstaPOI cascade;
 
+drop table android_metadata cascade;
+
 --==============================================================
 -- Table: Hala
 --==============================================================
 create table Hala (
 IDHale               INTEGER              not null,
-ImeHale              VARCHAR(20)          not null,
+ImeHale              TEXT                 not null,
 primary key (IDHale)
 );
 
@@ -63,7 +65,7 @@ IDHale ASC
 --==============================================================
 create table Kategorija (
 IDKategorije         INTEGER              not null,
-ImeKategorije        VARCHAR(100)         not null,
+ImeKategorije        TEXT                 not null,
 primary key (IDKategorije)
 );
 
@@ -80,16 +82,16 @@ IDKategorije ASC
 create table Trgovina (
 IDTrgovine           INTEGER              not null,
 IDHale               INTEGER              not null,
-ImeTrgovine          VARCHAR(50)          not null,
-Telefon              VARCHAR(50),
-Email                VARCHAR(50),
-SpletnaStran         VARCHAR(50),
-PonPetOd             TIME                 not null,
-PonPetDo             TIME                 not null,
-SobOd                TIME                 not null,
-SobDo                TIME                 not null,
-NedOd                TIME                 not null,
-NedDo                TIME                 not null,
+ImeTrgovine          TEXT                 not null,
+Telefon              TEXT,
+Email                TEXT,
+SpletnaStran         TEXT,
+PonPetOd             TEXT,
+PonPetDo             TEXT,
+SobOd                TEXT,
+SobDo                TEXT,
+NedOd                TEXT,
+NedDo                TEXT,
 primary key (IDTrgovine),
 foreign key (IDHale)
       references Hala (IDHale)
@@ -135,7 +137,7 @@ IDKategorije ASC
 --==============================================================
 create table VrstaPOI (
 IDVrste              INTEGER              not null,
-Vrsta                VARCHAR(50)          not null,
+Vrsta                TEXT                 not null,
 primary key (IDVrste)
 );
 
@@ -145,7 +147,8 @@ primary key (IDVrste)
 create table POI (
 IDPoi                INTEGER              not null,
 IDVrste              INTEGER              not null,
-Lokacija             VARCHAR(50)          not null,
+LokacijaLat          REAL                 not null,
+LokacijaLong         REAL,
 primary key (IDPoi),
 foreign key (IDVrste)
       references VrstaPOI (IDVrste)
@@ -185,7 +188,8 @@ IDHale ASC
 create table Vhod (
 IDVhoda              INTEGER              not null,
 IDHale               INTEGER,
-Lokacija             VARCHAR(50)          not null,
+LokacijaLat          REAL                 not null,
+LokacijaLong         REAL                 not null,
 primary key (IDVhoda),
 foreign key (IDHale)
       references Hala (IDHale)
@@ -210,5 +214,12 @@ IDHale ASC
 --==============================================================
 create unique index VrstaPOI_PK on VrstaPOI (
 IDVrste ASC
+);
+
+--==============================================================
+-- Table: android_metadata
+--==============================================================
+create table android_metadata (
+locale               TEXT
 );
 
