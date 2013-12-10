@@ -7,6 +7,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.util.Log;
 import android.view.Menu;
+import android.widget.TextView;
 
 public class TrgovinaActivity extends Activity {
 
@@ -15,9 +16,12 @@ public class TrgovinaActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_trgovina);
 		
-		Intent intent = getIntent();
-		HashMap<String, String> data = (HashMap<String, String>)intent.getSerializableExtra("data");
-		Log.i("prebran extra", data.get("ImeTrgovine"));
+		HashMap<String, String> data = (HashMap<String, String>)getIntent().getSerializableExtra("data");
+		// polnjenje podatkov
+		getActionBar().setTitle(data.get("ImeTrgovine"));
+		((TextView)findViewById(R.id.tv_telefon)).setText("Telefon: " + data.get("Telefon"));
+		((TextView)findViewById(R.id.tv_email)).setText("Email: " + data.get("Email"));
+		((TextView)findViewById(R.id.tv_spletnaStran)).setText("Spletna stran: " + data.get("SpletnaStran"));
 	}
 
 	@Override

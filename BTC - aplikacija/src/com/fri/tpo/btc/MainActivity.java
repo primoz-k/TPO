@@ -10,6 +10,8 @@ import com.google.android.gms.maps.GoogleMap.OnMapClickListener;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polygon;
 import com.google.android.gms.maps.model.PolygonOptions;
 
@@ -31,7 +33,7 @@ public class MainActivity extends Activity implements OnMapClickListener {
 	TextView tv;
 	
 	private GoogleMap map;
-	private Polygon p; // testni poligon za dvorano A
+	private Polygon p1, p2; // testni poligon za dvorano A
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -59,7 +61,7 @@ public class MainActivity extends Activity implements OnMapClickListener {
 	    
 	    // nalozi mapo
 	    try {
-            initilizeMap(); 
+            inicializirajZemljevid(); 
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -73,25 +75,32 @@ public class MainActivity extends Activity implements OnMapClickListener {
 		return true;
 	}
 	
+	// odpiranje trgovine
 	public void odpriTrgovino(View v) {
 		Log.i("klik", "odpiranje trgovine");
 		
 		// odpre aktivnost za trgovino s podanim hashmapom
 		HashMap<String, String> trgovina = new HashMap<String, String>(); // ZAENKRAT TEST
 		trgovina.put("ImeTrgovine", "BigBang");
+		trgovina.put("Telefon", "01 123 654 789");
+		trgovina.put("Email", "info@bigbang.si");
+		trgovina.put("SpletnaStran", "bigbang.si");
 		Intent intent = new Intent(this, TrgovinaActivity.class);
 		intent.putExtra("data", trgovina);
 		this.startActivity(intent);
 	}
 	
-	@Override
-	protected void onResume() {
-		// TODO Auto-generated method stub
-		super.onResume();
+	// odpiranje hale
+	public void odpriHalo(View v) {
+		Log.i("klik", "odpiranje hale");
+		
+		// odpre aktivnost za halo
+		Intent intent = new Intent(this, HalaActivity.class);
+		this.startActivity(intent);
 	}
 	
 	// inicializacija zemljevida
-    private void initilizeMap() {
+    private void inicializirajZemljevid() {
         if (map == null) {
             map = ((MapFragment) getFragmentManager().findFragmentById(
                     R.id.map)).getMap();
@@ -109,23 +118,43 @@ public class MainActivity extends Activity implements OnMapClickListener {
             map.setOnMapClickListener(this);
             // nastavi kamero na BTC
             map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(46.067008, 14.544182), 15));
+            // onemogoci interacije
+            map.getUiSettings().setRotateGesturesEnabled(false);
+            map.getUiSettings().setTiltGesturesEnabled(false);
             
-            // testni overlay za halo A
-            PolygonOptions overlay = new PolygonOptions();
-            overlay.add(new LatLng(46.067886, 14.541543), new LatLng(46.067961, 14.542251), new LatLng(46.065474, 14.543774), new LatLng(46.065311, 14.543066));
-            overlay.strokeColor(Color.RED);
-            overlay.strokeWidth(1f);
-            overlay.fillColor(Color.argb(50, 0, 255, 0)); // pol prosojno            
-            p = map.addPolygon(overlay);
-           
-            
+            ustvariPoligone();
+
+            // test za marker
+            MarkerOptions marker = new MarkerOptions();
+            marker.position(new LatLng(46.067589, 14.545394));
+            marker.title("Vhod v halo");
+            map.addMarker(marker);
         }
     }
     
+    // ustvarjanje poligonov za hale
+    private void ustvariPoligone() {
+    	// testni overlay za halo A
+        PolygonOptions overlay = new PolygonOptions();
+        overlay.add(new LatLng(46.067886, 14.541543), new LatLng(46.067961, 14.542251), new LatLng(46.065474, 14.543774), new LatLng(46.065311, 14.543066));
+        overlay.strokeColor(Color.RED);
+        overlay.strokeWidth(1f);
+        overlay.fillColor(Color.argb(50, 0, 255, 0)); // pol prosojno            
+        p1 = map.addPolygon(overlay);
+        // testni overlay za city park halo
+        overlay = new PolygonOptions();
+        overlay.add(new LatLng(46.069144, 14.544461), new LatLng(46.069368, 14.545115), new LatLng(46.068571, 14.545662), new LatLng(46.068690, 14.546317), new LatLng(46.066353, 14.547712), new LatLng(46.065981, 14.546349));
+        overlay.strokeColor(Color.BLUE);
+        overlay.strokeWidth(1f);
+        overlay.fillColor(Color.argb(50, 0, 255, 255)); // pol prosojno 
+        p2 = map.addPolygon(overlay);
+    }
+    
+    // klik na zemljevid
     @Override
     public void onMapClick(LatLng klik) {
     	Log.i("Klik", "klik na karto " + klik.toString());
-    	if (vsebuje(p, klik))
+    	if (vsebuje(p1, klik) || vsebuje(p2, klik))
     		Toast.makeText(this, "Klik na halo!", Toast.LENGTH_SHORT).show();
     }
     

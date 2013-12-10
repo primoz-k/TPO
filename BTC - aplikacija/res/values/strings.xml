@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">BTC</string>
+    <string name="app_name">BTC City Zemljevid</string>
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
-    <string name="title_activity_trgovina">(Ime trgovine) - (Ime hale)</string>
+    <string name="title_activity_trgovina">(Ime trgovine)</string>
+    <string name="title_activity_hala">(ime hale)</string>
 
 </resources>

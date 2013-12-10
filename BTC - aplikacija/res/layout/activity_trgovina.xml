@@ -9,33 +9,33 @@
     tools:context=".TrgovinaActivity" >
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/tv_telefon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Telefon: " />
 
     <TextView
-        android:id="@+id/textView3"
+        android:id="@+id/tv_spletnaStran"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/textView1"
-        android:layout_below="@+id/textView1"
+        android:layout_alignLeft="@+id/tv_email"
+        android:layout_below="@+id/tv_email"
         android:text="Spletna stran:" />
 
     <TextView
-        android:id="@+id/textView1"
+        android:id="@+id/tv_email"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/textView2"
-        android:layout_below="@+id/textView2"
+        android:layout_alignLeft="@+id/tv_telefon"
+        android:layout_below="@+id/tv_telefon"
         android:text="Email:" />
 
     <TextView
         android:id="@+id/textView4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/textView3"
-        android:layout_below="@+id/textView3"
+        android:layout_alignLeft="@+id/tv_spletnaStran"
+        android:layout_below="@+id/tv_spletnaStran"
         android:layout_marginTop="39dp"
         android:text="Kategorije: blablabalbal" />
 

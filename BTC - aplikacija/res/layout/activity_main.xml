@@ -23,12 +23,21 @@
         android:layout_alignParentBottom="true" />
 
     <Button
-        android:id="@+id/bt_openTrgovina"
+        android:id="@+id/bt_odpriTrgovino"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
         android:onClick="odpriTrgovino"
-        android:text="Odpri trgovina activity" />
+        android:text="Odpri trgovino" />
+
+    <Button
+        android:id="@+id/bt_odpriHalo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@+id/bt_odpriTrgovino"
+        android:layout_below="@+id/bt_odpriTrgovino"
+        android:onClick="odpriHalo"
+        android:text="Odpri halo" />
 
 </RelativeLayout>
