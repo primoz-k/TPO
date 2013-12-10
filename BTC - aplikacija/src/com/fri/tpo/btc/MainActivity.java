@@ -4,6 +4,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.model.LatLng;
+
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
@@ -12,11 +17,14 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class MainActivity extends Activity {
 	DatabaseConnector db;
 	Cursor cur;
 	TextView tv;
+	
+	private GoogleMap map;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +49,13 @@ public class MainActivity extends Activity {
 		
 	    tv.setText(izpis);
 	    
+	    
+	    // nalozi mapo
+	    try {
+            initilizeMap(); 
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 	}
 	
 
@@ -61,5 +76,31 @@ public class MainActivity extends Activity {
 		intent.putExtra("data", trgovina);
 		this.startActivity(intent);
 	}
+	
+	@Override
+	protected void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+	}
+	
+	// inicializacija zemljevida
+    private void initilizeMap() {
+        if (map == null) {
+            map = ((MapFragment) getFragmentManager().findFragmentById(
+                    R.id.map)).getMap();
+ 
+            // check if map is created successfully or not
+            if (map == null) {
+                Toast.makeText(getApplicationContext(),
+                        "Karta ni narejena!", Toast.LENGTH_SHORT)
+                        .show();
+                return;
+            }
+            
+            //map.setMyLocationEnabled(true);
+            // nastavi kamero na BTC
+            map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(46.067008, 14.544182), 14));
+        }
+    }
 
 }
