@@ -23,12 +23,11 @@
             android:onClick="odpriTrgovino"
             android:text="Odpri trgovino (id = 2)" />
 
-        <Button
-            android:id="@+id/bt_odpriHalo"
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="odpriHalo"
-            android:text="Odpri halo (id = 1)" />
+            android:text="Klikni na halo na zemljevidu, da se odpre aktivnost za halo" />
 
         <fragment
             android:id="@+id/map"

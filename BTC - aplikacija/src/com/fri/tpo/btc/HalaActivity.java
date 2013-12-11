@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import android.os.Bundle;
 import android.app.Activity;
+import android.content.Intent;
 import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView.OnItemClickListener;
@@ -16,6 +17,8 @@ public class HalaActivity extends Activity implements OnItemClickListener {
 
 	private ListView lv_trgovine;
 	
+	private int idHale;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -23,17 +26,21 @@ public class HalaActivity extends Activity implements OnItemClickListener {
 		
 		lv_trgovine = (ListView)findViewById(R.id.lv_trgovine);
 		
-		int idHale = getIntent().getIntExtra("id", 1);
+		idHale = getIntent().getIntExtra("id", 1);
 		DatabaseConnector db = new DatabaseConnector(this);
+		DataTable dt = db.getDataTable("SELECT ImeTrgovine FROM Trgovina WHERE IDHale = " + idHale);
 		
 		// trgovine v list view
-		ArrayList<String> trgovineList = db.getAllData("SELECT IDTrgovine as _id, IDHale, ImeTrgovine FROM Trgovina WHERE IDHale = " + idHale).get("ImeTrgovine");
-		String[] trgovine = trgovineList.toArray(new String[trgovineList.size()]);
+		ArrayList<String> trgovineList = dt.getColumn("ImeTrgovine");
+		String[] trgovine = {"NI", "VNESENIH", "TRGOVIN!"};
+		if (trgovineList != null)
+			trgovineList.toArray(new String[trgovineList.size()]);
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, android.R.id.text1, trgovine);
         lv_trgovine.setAdapter(adapter); 
         lv_trgovine.setOnItemClickListener(this);
         
-        // ime trgovine v actionbar
+        
+        // ime hale v actionbar
         getActionBar().setTitle(db.getData(idHale, "SELECT IDHale as _id, ImeHale FROM Hala WHERE IDHale = ?").get("ImeHale"));
 	}
 
@@ -49,6 +56,6 @@ public class HalaActivity extends Activity implements OnItemClickListener {
 		String trgovina = lv_trgovine.getItemAtPosition(position).toString();
 		// http://stackoverflow.com/questions/12077955/android-using-simplecursoradapter-to-get-data-from-database-to-listview
 		// da cursor napolni listview
-		Toast.makeText(this, "Vrednost: " + lv_trgovine.getItemAtPosition(position).toString(), Toast.LENGTH_SHORT).show();
+		Toast.makeText(this, "Vrednost: " + trgovina, Toast.LENGTH_SHORT).show();
 	}
 }

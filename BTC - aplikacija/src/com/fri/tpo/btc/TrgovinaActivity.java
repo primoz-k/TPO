@@ -8,8 +8,11 @@ import android.content.Intent;
 import android.util.Log;
 import android.view.Menu;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class TrgovinaActivity extends Activity {
+	
+	private int idTrgovine;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -18,16 +21,18 @@ public class TrgovinaActivity extends Activity {
 		
 		DatabaseConnector db = new DatabaseConnector(this);
 		
-		HashMap<String, String> data = db.getTrgovina(getIntent().getIntExtra("id", 1));
-		// izpis vseh podatkov v slovarju v catlog
-		for (String k : data.keySet())
-			Log.i("key: value", k + ": " + data.get(k));
+		idTrgovine = getIntent().getIntExtra("id", -1);
+		
+		DataTable dt = db.getDataTable("SELECT * FROM Trgovina WHERE IDTrgovine = " + idTrgovine);
+		if (dt.isEmpty())
+			Toast.makeText(getApplicationContext(), "Trgovine ni v bazi!", Toast.LENGTH_SHORT).show();
+		
 		
 		// polnjenje podatkov
-		getActionBar().setTitle(data.get("ImeTrgovine"));
-		((TextView)findViewById(R.id.tv_telefon)).setText("Telefon: " + data.get("Telefon"));
-		((TextView)findViewById(R.id.tv_email)).setText("Email: " + data.get("Email"));
-		((TextView)findViewById(R.id.tv_spletnaStran)).setText("Spletna stran: " + data.get("SpletnaStran"));
+		getActionBar().setTitle(dt.getString("ImeTrgovine"));
+		((TextView)findViewById(R.id.tv_telefon)).setText("Telefon: " + dt.getString("Telefon"));
+		((TextView)findViewById(R.id.tv_email)).setText("Email: " + dt.getString("Email"));
+		((TextView)findViewById(R.id.tv_spletnaStran)).setText("Spletna stran: " + dt.getString("SpletnaStran"));
 	}
 
 	@Override

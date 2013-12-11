@@ -143,12 +143,21 @@ public class DatabaseConnector extends SQLiteOpenHelper{
         				ArrayList<String> l = data.get(col);
         				l.add(cursor.getString(i));
         				data.put(col, l);
-
 	        		}
         		} while (cursor.moveToNext());  
 	        }
 	        close();
 	        return data;
+	    }
+	    
+	    public DataTable getDataTable(String query) {	    	
+	    	startDatabase();
+	    	Cursor cursor = myDatabase.rawQuery(query, null);
+	    	
+	    	DataTable t = DataTable.createDataTable(cursor);
+	        close();
+	        
+	    	return t;
 	    }
 	    
 	    /*private HashMap<String, ArrayList<String>> getAllData(String query) {
