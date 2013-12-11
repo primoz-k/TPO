@@ -1,5 +1,7 @@
 package com.fri.tpo.btc;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import android.app.Activity;
@@ -24,7 +26,7 @@ public class MainActivity extends Activity implements OnMapClickListener {
 	private DatabaseConnector db;
 	
 	private GoogleMap map;
-	private Polygon p1, p2; // testni poligon za dvorano A, citypark
+	private HashMap<String, Polygon> obrisi; // obrisi hal
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -33,17 +35,12 @@ public class MainActivity extends Activity implements OnMapClickListener {
 		
 		db = new DatabaseConnector(this);
 
-		/*ArrayList<HashMap<String, String>> vseHale = db.getAllDataFromHala();
-		
-		String izpis="";
-		for (HashMap<String, String> hala : vseHale)
-			izpis += hala.get("_id").toString()+": "+hala.get("ImeHale").toString()+"\n";*/
-
 	    // nalozi mapo
 	    try {
             inicializirajZemljevid(); 
         } catch (Exception e) {
             e.printStackTrace();
+            Toast.makeText(getApplicationContext(), "napaka ob inicializaciji: " + e.getMessage(), Toast.LENGTH_LONG).show();
         }
 	}
 	
@@ -95,10 +92,10 @@ public class MainActivity extends Activity implements OnMapClickListener {
                 ustvariPoligone();
 
                 // test za marker
-                MarkerOptions marker = new MarkerOptions();
+                /*MarkerOptions marker = new MarkerOptions();
                 marker.position(new LatLng(46.067589, 14.545394));
                 marker.title("Vhod v halo");
-                map.addMarker(marker);
+                map.addMarker(marker);*/
             } else {
             	Toast.makeText(getApplicationContext(), "Karta ni narejena!", Toast.LENGTH_SHORT).show();
             }
@@ -107,28 +104,40 @@ public class MainActivity extends Activity implements OnMapClickListener {
     
     // ustvarjanje poligonov za hale
     private void ustvariPoligone() {
-    	// testni overlay za halo A
-        PolygonOptions overlay = new PolygonOptions();
-        overlay.add(new LatLng(46.067886, 14.541543), new LatLng(46.067961, 14.542251), new LatLng(46.065474, 14.543774), new LatLng(46.065311, 14.543066));
-        overlay.strokeColor(Color.RED);
-        overlay.strokeWidth(1f);
-        overlay.fillColor(Color.argb(50, 0, 255, 0)); // pol prosojno            
-        p1 = map.addPolygon(overlay);
-        // testni overlay za city park halo
-        overlay = new PolygonOptions();
-        overlay.add(new LatLng(46.069144, 14.544461), new LatLng(46.069368, 14.545115), new LatLng(46.068571, 14.545662), new LatLng(46.068690, 14.546317), new LatLng(46.066353, 14.547712), new LatLng(46.065981, 14.546349));
-        overlay.strokeColor(Color.BLUE);
-        overlay.strokeWidth(1f);
-        overlay.fillColor(Color.argb(50, 0, 255, 255)); // pol prosojno 
-        p2 = map.addPolygon(overlay);
+        // inicializacija in izris poligonov za vse hale
+        obrisi = new HashMap<String, Polygon>();
+        ArrayList<String> hale = db.getAllData("SELECT IDHale FROM Hala").get("IDHale");
+        for (String id : hale) {
+        	PolygonOptions poly = new PolygonOptions();
+        	poly.strokeColor(Color.BLACK).strokeWidth(1f).fillColor(Color.argb(50, 0, 255, 0));
+        	
+        	// preberemo tocke iz baze
+        	HashMap<String, ArrayList<String>> lokacijeObrisov = db.getAllData("SELECT LokacijaLat, LokacijaLong FROM Obris WHERE IDHale = " + id);
+        	ArrayList<String> lLat = lokacijeObrisov.get("LokacijaLat");
+        	ArrayList<String> lLong = lokacijeObrisov.get("LokacijaLong");
+        	
+        	if (lLat == null)
+        		continue;
+        	
+        	// dodamo tocke v polygon
+        	for (int i = 0; i < lLat.size(); i++)
+        		poly.add(new LatLng(Double.parseDouble(lLat.get(i)), Double.parseDouble(lLong.get(i))));
+        	
+        	obrisi.put(id, map.addPolygon(poly));
+        }
     }
     
     // klik na zemljevid
     @Override
     public void onMapClick(LatLng klik) {
     	Log.i("Klik", "klik na karto " + klik.toString());
-    	if (vsebuje(p1, klik) || vsebuje(p2, klik))
-    		Toast.makeText(getApplicationContext(), "Klik na halo!", Toast.LENGTH_SHORT).show();
+    	
+    	for (String id : obrisi.keySet()) {
+    		if (vsebuje(obrisi.get(id), klik)) {
+    			Toast.makeText(getApplicationContext(), "Klik na halo id: " + id, Toast.LENGTH_SHORT).show();
+    			break;
+    		}
+    	}
     }
     
     // ali je izbrana tocka v poligonu
