@@ -16,7 +16,13 @@ public class TrgovinaActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_trgovina);
 		
-		HashMap<String, String> data = (HashMap<String, String>)getIntent().getSerializableExtra("data");
+		DatabaseConnector db = new DatabaseConnector(this);
+		
+		HashMap<String, String> data = db.getTrgovina(getIntent().getIntExtra("id", 1));
+		// izpis vseh podatkov v slovarju v catlog
+		for (String k : data.keySet())
+			Log.i("key: value", k + ": " + data.get(k));
+		
 		// polnjenje podatkov
 		getActionBar().setTitle(data.get("ImeTrgovine"));
 		((TextView)findViewById(R.id.tv_telefon)).setText("Telefon: " + data.get("Telefon"));

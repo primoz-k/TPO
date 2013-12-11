@@ -4,6 +4,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -21,6 +22,7 @@ public class DatabaseConnector extends SQLiteOpenHelper{
 	    private static String DB_NAME = "baza.sqlite3";
 	    private SQLiteDatabase myDatabase;
 	    private final Context myContext;
+	    private final boolean recreate = false; // daj to na TRUE ce se spreminja baza da jo ponovno zgradi in nazaj na FALSE
 	    
 	    public DatabaseConnector(Context context){
 	        super(context, DB_NAME, null, 1);
@@ -30,7 +32,7 @@ public class DatabaseConnector extends SQLiteOpenHelper{
 	    	 
 	    	boolean dbExist = checkDataBase();
 	    	// ce baza se ne obstaja jo prekopiramo iz assets v bazo za branje
-	    	if(!dbExist){
+	    	if (recreate || !dbExist){
 	        	this.getReadableDatabase();
     			copyDataBase();
 	    	}
@@ -43,16 +45,12 @@ public class DatabaseConnector extends SQLiteOpenHelper{
 	    
 	    public void startDatabase(){
 	    	 try {
-	    		 
-	         	createDataBase();
-	  
-	    	 } catch (IOException ioe) { 
+	         	 createDataBase();
+	         	 openDataBase();
+	    	 } catch (IOException e) { 
 	    		 throw new Error("Unable to create database");	
-	    	 }
-		  	try {
-		  		openDataBase();
-		  	}catch(SQLException e){
-		  		throw e;
+	    	 } catch (SQLException e){
+		  		 throw e;
 		  	}
 	    }
 	    
@@ -60,12 +58,12 @@ public class DatabaseConnector extends SQLiteOpenHelper{
 	    	 
 	    	SQLiteDatabase checkDB = null;
 	 
-	    	try{
+	    	try {
 	    		
 	    		String myPath = DB_PATH + DB_NAME;
 	    		checkDB = SQLiteDatabase.openDatabase(myPath, null, SQLiteDatabase.OPEN_READONLY);
 	    		
-	    	}catch(SQLiteException e){}
+	    	} catch(SQLiteException e){}
 	 
 	    	if(checkDB != null) checkDB.close();
 	 
@@ -96,45 +94,72 @@ public class DatabaseConnector extends SQLiteOpenHelper{
 	    } 
 	    
 	    
-	    public HashMap<String, String> getHalaInHashMap(int idHale) {
-	    	return getDataHashMap(idHale, "Select * FROM Hala WHERE _id=?");
+	    public HashMap<String, String> getHala(int idHale) {
+	    	return getData(idHale, "Select IDHale as _id, * FROM Hala WHERE _id = ?");
 	    } 
 	    
-	    public HashMap<String, String> getTrgovinaInHashMap(int idHale) {
-	        return getDataHashMap(idHale, "Select * FROM Trgovina WHERE _id=?");
+	    public HashMap<String, String> getTrgovina(int idTrgovine) {
+	        return getData(idTrgovine, "Select IDTrgovine as _id, * FROM Trgovina WHERE _id = ?");
 	    }
 	    
-	    private HashMap<String, String> getDataHashMap(int id,String query) {
+	    public HashMap<String, String> getData(int id, String query) {
 	    	startDatabase();
 	    	HashMap<String, String> data = new HashMap<String, String>();
 	        Cursor cursor = myDatabase.rawQuery(query,new String[]{""+id});
-	        if(cursor!=null && cursor.getCount()>0){
-        		cursor.moveToFirst();
-        		for(int i=0;i<=cursor.getCount();i++){
+	        
+	        // podatke iz prve vrstice shrani v slovar
+	        if (cursor != null && cursor.getCount() > 0) {
+	        	cursor.moveToFirst();
+	        	for(int i = 0; i < cursor.getColumnCount(); i++)
         			data.put(cursor.getColumnName(i), cursor.getString(i));
-        		}     
+	        }
+	        close();
+	        
+	        return data;
+	    }
+	    
+	    /*public ArrayList<HashMap<String, String>> getAllDataFromHala(){
+	    	return getAllData("Select IDHale as _id, * FROM Hala"); 
+	    }
+	    
+	    public ArrayList<HashMap<String, String>> getAllDataFromTrgovina(){
+	    	return getAllData("Select IDTrgovine as _id, * FROM Trgovina"); 
+	    }*/
+	    
+	    // kljuc je stolpec.. vrednost je seznam vrstic
+	    public HashMap<String, ArrayList<String>> getAllData(String query) {
+	    	startDatabase();
+	    	HashMap<String, ArrayList<String>> data = new HashMap<String,ArrayList<String>>();
+	        Cursor cursor = myDatabase.rawQuery(query, null);
+	        
+	        if (cursor != null && cursor.getCount() > 0) {
+        		cursor.moveToFirst();
+        		do {
+	        		for (int i=0; i < cursor.getColumnCount(); i++) {
+	        			String col = cursor.getColumnName(i);
+	        			if (!data.containsKey(col)) 
+	        				data.put(col, new ArrayList<String>());
+
+        				ArrayList<String> l = data.get(col);
+        				l.add(cursor.getString(i));
+        				data.put(col, l);
+
+	        		}
+        		} while (cursor.moveToNext());  
 	        }
 	        close();
 	        return data;
 	    }
 	    
-	    public ArrayList<HashMap<String, String>> getAllDataFromHala(){
-	    	return getAllData("Select * FROM Hala"); 
-	    }
-	    
-	    public ArrayList<HashMap<String, String>> getAllDataFromTrgovina(){
-	    	return getAllData("Select * FROM Trgovina"); 
-	    }
-	    
-	    private ArrayList<HashMap<String, String>> getAllData(String query) {
+	    /*private HashMap<String, ArrayList<String>> getAllData(String query) {
 	    	startDatabase();
-	    	ArrayList<HashMap<String, String>> data = new ArrayList<HashMap<String,String>>();
+	    	HashMap<String, ArrayList<String>> data = new HashMap<String,ArrayList<String>>();
 	    	HashMap<String, String> line = new HashMap<String, String>();
 	        Cursor cursor = myDatabase.rawQuery(query,null);
 	        if(cursor!=null && cursor.getCount()>0){
         		cursor.moveToFirst();
         		do{
-	        		for(int i=0;i<=cursor.getColumnCount()-1;i++){
+	        		for(int i=0;i<cursor.getColumnCount();i++){
 	        			line.put(cursor.getColumnName(i), cursor.getString(i));
 	        		}     
 	        		data.add(line);
@@ -143,7 +168,7 @@ public class DatabaseConnector extends SQLiteOpenHelper{
 	        }
 	        close();
 	        return data;
-	    }
+	    }*/
 	    
 	    private void copyDataBase() throws IOException{
 	    	InputStream myInput = myContext.getAssets().open(DB_NAME);

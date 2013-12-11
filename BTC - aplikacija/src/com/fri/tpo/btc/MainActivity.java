@@ -1,64 +1,44 @@
 package com.fri.tpo.btc;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
+import android.app.Activity;
+import android.content.Intent;
+import android.graphics.Color;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.Menu;
+import android.view.View;
+import android.widget.Toast;
+
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnMapClickListener;
 import com.google.android.gms.maps.MapFragment;
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polygon;
 import com.google.android.gms.maps.model.PolygonOptions;
 
-import android.os.Bundle;
-import android.app.Activity;
-import android.content.Intent;
-import android.database.Cursor;
-import android.graphics.Color;
-import android.graphics.Point;
-import android.util.Log;
-import android.view.Menu;
-import android.view.View;
-import android.widget.TextView;
-import android.widget.Toast;
-
 public class MainActivity extends Activity implements OnMapClickListener {
-	DatabaseConnector db;
-	Cursor cur;
-	TextView tv;
+	private DatabaseConnector db;
 	
 	private GoogleMap map;
-	private Polygon p1, p2; // testni poligon za dvorano A
+	private Polygon p1, p2; // testni poligon za dvorano A, citypark
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		
-		tv = (TextView)findViewById(R.id.tv1);
-		
 		db = new DatabaseConnector(this);
-		
-		
-		
-		//String data = db.getData("Select * from Hala");
-		
-		//HashMap<String, String> hale = db.getHalaInHashMap(1);
-		ArrayList<HashMap<String, String>> vseHale = db.getAllDataFromHala();
+
+		/*ArrayList<HashMap<String, String>> vseHale = db.getAllDataFromHala();
 		
 		String izpis="";
-		for(HashMap<String, String> hala:vseHale)
-			izpis+=hala.get("_id").toString()+"->"+hala.get("ImeHale").toString()+"\n";
-			
-		
-	    tv.setText(izpis);
-	    
-	    
+		for (HashMap<String, String> hala : vseHale)
+			izpis += hala.get("_id").toString()+": "+hala.get("ImeHale").toString()+"\n";*/
+
 	    // nalozi mapo
 	    try {
             inicializirajZemljevid(); 
@@ -79,14 +59,10 @@ public class MainActivity extends Activity implements OnMapClickListener {
 	public void odpriTrgovino(View v) {
 		Log.i("klik", "odpiranje trgovine");
 		
-		// odpre aktivnost za trgovino s podanim hashmapom
-		HashMap<String, String> trgovina = new HashMap<String, String>(); // ZAENKRAT TEST
-		trgovina.put("ImeTrgovine", "BigBang");
-		trgovina.put("Telefon", "01 123 654 789");
-		trgovina.put("Email", "info@bigbang.si");
-		trgovina.put("SpletnaStran", "bigbang.si");
+		// odpre aktivnost za trgovino s podanim hashmapom (trgovino)
 		Intent intent = new Intent(this, TrgovinaActivity.class);
-		intent.putExtra("data", trgovina);
+		intent.putExtra("id", 2);
+		intent.putExtra("data", db.getTrgovina(2)); // ID trgovine 2 ! za test
 		this.startActivity(intent);
 	}
 	
@@ -96,39 +72,36 @@ public class MainActivity extends Activity implements OnMapClickListener {
 		
 		// odpre aktivnost za halo
 		Intent intent = new Intent(this, HalaActivity.class);
+		intent.putExtra("id", 1);
 		this.startActivity(intent);
 	}
 	
 	// inicializacija zemljevida
     private void inicializirajZemljevid() {
         if (map == null) {
-            map = ((MapFragment) getFragmentManager().findFragmentById(
-                    R.id.map)).getMap();
+            map = ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap();
  
             // check if map is created successfully or not
-            if (map == null) {
-                Toast.makeText(getApplicationContext(),
-                        "Karta ni narejena!", Toast.LENGTH_SHORT)
-                        .show();
-                return;
-            }
-            
-            // https://developers.google.com/maps/documentation/android/views - dokumentacija za maps API
-            // listener za klik na mapo
-            map.setOnMapClickListener(this);
-            // nastavi kamero na BTC
-            map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(46.067008, 14.544182), 15));
-            // onemogoci interacije
-            map.getUiSettings().setRotateGesturesEnabled(false);
-            map.getUiSettings().setTiltGesturesEnabled(false);
-            
-            ustvariPoligone();
+            if (map != null) {
+            	// https://developers.google.com/maps/documentation/android/views - dokumentacija za maps API
+                // listener za klik na mapo
+                map.setOnMapClickListener(this);
+                // nastavi kamero na BTC
+                map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(46.067008, 14.544182), 15));
+                // onemogoci interacije
+                map.getUiSettings().setRotateGesturesEnabled(false);
+                map.getUiSettings().setTiltGesturesEnabled(false);
+                
+                ustvariPoligone();
 
-            // test za marker
-            MarkerOptions marker = new MarkerOptions();
-            marker.position(new LatLng(46.067589, 14.545394));
-            marker.title("Vhod v halo");
-            map.addMarker(marker);
+                // test za marker
+                MarkerOptions marker = new MarkerOptions();
+                marker.position(new LatLng(46.067589, 14.545394));
+                marker.title("Vhod v halo");
+                map.addMarker(marker);
+            } else {
+            	Toast.makeText(getApplicationContext(), "Karta ni narejena!", Toast.LENGTH_SHORT).show();
+            }
         }
     }
     
@@ -155,7 +128,7 @@ public class MainActivity extends Activity implements OnMapClickListener {
     public void onMapClick(LatLng klik) {
     	Log.i("Klik", "klik na karto " + klik.toString());
     	if (vsebuje(p1, klik) || vsebuje(p2, klik))
-    		Toast.makeText(this, "Klik na halo!", Toast.LENGTH_SHORT).show();
+    		Toast.makeText(getApplicationContext(), "Klik na halo!", Toast.LENGTH_SHORT).show();
     }
     
     // ali je izbrana tocka v poligonu
