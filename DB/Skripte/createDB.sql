@@ -1,6 +1,6 @@
 --==============================================================
 -- DBMS name:      ANSI Level 2
--- Created on:     9.12.2013 14:03:35
+-- Created on:     11.12.2013 15:57:28
 --==============================================================
 
 
@@ -19,6 +19,12 @@ drop index prodaja_izdelke_kategorije_FK;
 drop index prodaja_izdelke_kategorije_PK;
 
 drop table KategorijaTrgovine cascade;
+
+drop index ima_obris_FK;
+
+drop index Obris_PK;
+
+drop table Obris cascade;
 
 drop index je_vrste_FK;
 
@@ -50,6 +56,8 @@ drop table android_metadata cascade;
 create table Hala (
 IDHale               INTEGER              not null,
 ImeHale              TEXT                 not null,
+CenterLat            REAL                 not null,
+CenterLong           REAL                 not null,
 primary key (IDHale)
 );
 
@@ -130,6 +138,33 @@ IDTrgovine ASC
 --==============================================================
 create  index prodaja_izdelke_kategorije2_FK on KategorijaTrgovine (
 IDKategorije ASC
+);
+
+--==============================================================
+-- Table: Obris
+--==============================================================
+create table Obris (
+IDObrisa             INTEGER              not null,
+IDHale               INTEGER,
+LokacijaLat          REAL                 not null,
+LokacijaLong         REAL                 not null,
+primary key (IDObrisa),
+foreign key (IDHale)
+      references Hala (IDHale)
+);
+
+--==============================================================
+-- Index: Obris_PK
+--==============================================================
+create unique index Obris_PK on Obris (
+IDObrisa ASC
+);
+
+--==============================================================
+-- Index: ima_obris_FK
+--==============================================================
+create  index ima_obris_FK on Obris (
+IDHale ASC
 );
 
 --==============================================================

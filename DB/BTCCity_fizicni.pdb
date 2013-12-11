@@ -12,7 +12,7 @@
 <a:Code>BTCCity_fizicni</a:Code>
 <a:CreationDate>1386012970</a:CreationDate>
 <a:Creator>Urška</a:Creator>
-<a:ModificationDate>1386593933</a:ModificationDate>
+<a:ModificationDate>1386594215</a:ModificationDate>
 <a:Modifier>Urška</a:Modifier>
 <a:History>ORG {83A1B7DF-4F6D-40D0-9ABA-A8DDD10E787E}
 DAT 1386012977
@@ -78,7 +78,7 @@ UpdateTableStatistics=Yes
 UpdateColumnStatistics=Yes
 
 [FolderOptions\Physical Objects\Database Generation]
-GenScriptName=SQLskripta.sql
+GenScriptName=createDB.sql
 GenScriptName0=
 GenScriptName1=
 GenScriptName2=
