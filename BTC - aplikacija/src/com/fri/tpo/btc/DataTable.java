@@ -7,39 +7,32 @@ import java.util.HashMap;
 import android.database.Cursor;
 
 public class DataTable {
-	private ArrayList<String> columns;
-	private ArrayList<ArrayList<String>> data;
+	private ArrayList<HashMap<String, String>> data;
 	
 	public DataTable() {
-		columns = new ArrayList<String>();
-		data = new ArrayList<ArrayList<String>>();
+		data = new ArrayList<HashMap<String, String>>();
 	}
 	
 	public String getString(String column, int row) {
-		if (!columns.contains(column) || row >= data.size())
+		if (row >= data.size() || !data.get(row).containsKey(column))
 			return "";
-
-		int index = columns.indexOf(column);
 		
-		return index != -1 ? data.get(row).get(index) : "";
+		return data.get(row).get(column);
 	}
 	
 	public String getString(String column) {
 		return getString(column, 0);
 	}
 	
-	public ArrayList<String> getRow(int row) {
+	public HashMap<String, String> getRow(int row) {
 		return data.get(row);
 	}
 	
 	public ArrayList<String> getColumn(String column) {
 		ArrayList<String> col = new ArrayList<String>(getRowCount());
-		int index = columns.indexOf(column);
-		if (index == -1)
-			return null;
 		
-		for (ArrayList<String> cols : data)
-			col.add(cols.get(index));
+		for (HashMap<String, String> d : data)
+			col.add(d.get(column));
 		
 		return col;
 	}
@@ -49,14 +42,10 @@ public class DataTable {
 	}
 	
 	public int getColCount() {
-		return columns.size();
+		return data.get(0).size();
 	}
-	
-	public void setColumns(String[] columns) {
-		this.columns = new ArrayList<String>(Arrays.asList(columns));
-	}
-	
-	public void addRow(ArrayList<String> row) {
+
+	public void addRow(HashMap<String, String> row) {
 		data.add(row);
 	}
 	
@@ -69,15 +58,18 @@ public class DataTable {
     	
     	if (c != null && c.getCount() > 0) {
     		c.moveToFirst();
-    		dt.setColumns(c.getColumnNames());
     		do {
-    			ArrayList<String> row = new ArrayList<String>(c.getCount());
+    			HashMap<String, String> row = new HashMap<String, String>(c.getCount());
         		for (int i=0; i < c.getColumnCount(); i++)
-        			row.add(c.getString(i));
+        			row.put(c.getColumnName(i), c.getString(i));
         		dt.addRow(row);
     		} while (c.moveToNext());  
         }
 		
 		return dt;
+	}
+	
+	public ArrayList<HashMap<String, String>> getData() {
+		return data;
 	}
 }

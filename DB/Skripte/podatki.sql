@@ -61,7 +61,7 @@ INSERT INTO Obris VALUES (14, 3, 46.065266, 14.543120);
 -- Vhod(IDVhoda, IDHale, LokacijaLat, LokacijaLong)
 -- http://universimmedia.pagesperso-orange.fr/geo/loc.htm
 INSERT INTO Vhod VALUES (1, 1, 46.06824, 14.54662);
-INSERT INTO Vhod VALUES (2, 1, 46.06735; 14.54717);
+INSERT INTO Vhod VALUES (2, 1, 46.06735, 14.54717);
 INSERT INTO Vhod VALUES (3, 1, 46.06760, 14.54530);
 -- . . .
 
