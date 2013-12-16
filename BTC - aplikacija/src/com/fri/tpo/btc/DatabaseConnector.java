@@ -22,7 +22,7 @@ public class DatabaseConnector extends SQLiteOpenHelper{
 	    private static String DB_NAME = "baza.sqlite3";
 	    private SQLiteDatabase myDatabase;
 	    private final Context myContext;
-	    private final boolean recreate = false; // daj to na TRUE ce se spreminja baza da jo ponovno zgradi in nazaj na FALSE
+	    private final boolean recreate = true; // daj to na TRUE ce se spreminja baza da jo ponovno zgradi in nazaj na FALSE
 	    
 	    public DatabaseConnector(Context context){
 	        super(context, DB_NAME, null, 1);

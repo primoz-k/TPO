@@ -95,10 +95,10 @@ INSERT INTO Kategorija VALUES (25, 'Živali');
 
 -- Trgovina(IDTrgovine, IDHale, ImeTrgovine, Telefon, Email, SpetnaStran, PonPetOd, PonPetDo, SobOd, SobDo, NedOd, NedDo)
 -- obratovalni cas je lahko tut NULL
-INSERT INTO Kategorija VALUES (1, 1, 'BigBang', '01/520 09 00', 'potrosniki@bigbang.si', 'bigbang.si', '09:00','21:00','08:00','21:00','08:00','15:00');
-INSERT INTO Kategorija VALUES (2, 1, '', '', '', '', '','','','','','');
-INSERT INTO Kategorija VALUES (3, 1, '', '', '', '', '','','','','','');
-INSERT INTO Kategorija VALUES (4, 1, '', '', '', '', '','','','','','');
+INSERT INTO Trgovina VALUES (1, 1, '7 Camicie', '01/755 62 32', '/', '7camicie.com' , '09:00','21:00','08:00','21:00','08:00','15:00');
+INSERT INTO Trgovina VALUES (2, 1, '', '', '', '', '','','','','','');
+INSERT INTO Trgovina VALUES (3, 1, '', '', '', '', '','','','','','');
+INSERT INTO Trgovina VALUES (4, 1, '', '', '', '', '','','','','','');
 ...
 
 -- KategorijaTrgovine(IDTrgovine, IDKategorije)

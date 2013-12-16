@@ -2,8 +2,7 @@
 <resources>
 
     <string name="app_name">BTC City Zemljevid</string>
-    <string name="action_settings">Settings</string>
-    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Nastavitve</string>
     <string name="title_activity_trgovina">(Ime trgovine)</string>
     <string name="title_activity_hala">(ime hale)</string>
 

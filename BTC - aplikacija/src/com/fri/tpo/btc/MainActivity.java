@@ -58,7 +58,7 @@ public class MainActivity extends Activity implements OnMapClickListener {
 		
 		// odpre aktivnost za trgovino s podanim hashmapom (trgovino)
 		Intent intent = new Intent(this, TrgovinaActivity.class);
-		intent.putExtra("id", 2);
+		intent.putExtra("id", 1);
 		this.startActivity(intent);
 	}
 	

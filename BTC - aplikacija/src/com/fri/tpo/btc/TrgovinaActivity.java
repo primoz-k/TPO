@@ -30,9 +30,13 @@ public class TrgovinaActivity extends Activity {
 		
 		// polnjenje podatkov
 		getActionBar().setTitle(dt.getString("ImeTrgovine"));
-		((TextView)findViewById(R.id.tv_telefon)).setText("Telefon: " + dt.getString("Telefon"));
-		((TextView)findViewById(R.id.tv_email)).setText("Email: " + dt.getString("Email"));
-		((TextView)findViewById(R.id.tv_spletnaStran)).setText("Spletna stran: " + dt.getString("SpletnaStran"));
+		((TextView)findViewById(R.id.tv_telefon)).setText(dt.getString("Telefon"));
+		((TextView)findViewById(R.id.tv_email)).setText(dt.getString("Email"));
+		((TextView)findViewById(R.id.tv_spletnaStran)).setText(dt.getString("SpletnaStran"));
+		TextView tv_casi = (TextView)findViewById(R.id.tv_odpiralni); // odpiralni cas
+		tv_casi.setText(String.format("pon - pet: %s - %s\n", dt.getString("PonPetOd"), dt.getString("PonPetDo")));
+		tv_casi.append(String.format("sob: %s - %s\n", dt.getString("SobOd"), dt.getString("SobDo")));
+		tv_casi.append(String.format("ned: %s - %s", dt.getString("NedOd"), dt.getString("NedDo")));
 	}
 
 	@Override
