@@ -8,13 +8,13 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".HalaActivity" >
 
-    <ListView
-        android:id="@+id/lv_trgovine"
+    <ExpandableListView
+        android:id="@+id/elv_kategorije"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true" >
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentTop="true" >
 
-    </ListView>
+    </ExpandableListView>
 
 </RelativeLayout>
