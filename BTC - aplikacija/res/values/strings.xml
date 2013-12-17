@@ -5,5 +5,9 @@
     <string name="action_settings">Nastavitve</string>
     <string name="title_activity_trgovina">(Ime trgovine)</string>
     <string name="title_activity_hala">(ime hale)</string>
+    <string name="title_activity_iskanje">Iskanje trgovin</string>
+    <string name="title_tab1">Kategorije</string>
+    <string name="title_tab2">Abecedni</string>
+    <string name="title_tab3">Ključna beseda</string>
 
 </resources>

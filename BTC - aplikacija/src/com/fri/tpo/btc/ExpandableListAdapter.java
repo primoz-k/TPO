@@ -30,12 +30,13 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
     }
  
     public long getChildId(int groupPosition, int childPosition) {
-        return childPosition;
+    	String child = (String) getChild(groupPosition, childPosition);
+    	int childId = Integer.parseInt(child.split(";")[1]);
+        return childId;
     }
  
-    public View getChildView(final int groupPosition, final int childPosition,
-            boolean isLastChild, View convertView, ViewGroup parent) {
-        final String laptop = (String) getChild(groupPosition, childPosition);
+    public View getChildView(final int groupPosition, final int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
+        String child = (String) getChild(groupPosition, childPosition);
         LayoutInflater inflater = context.getLayoutInflater();
  
         if (convertView == null) {
@@ -43,7 +44,8 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         }
  
         TextView item = (TextView) convertView.findViewById(R.id.laptop);
-        item.setText(laptop);
+        child = child.split(";")[0];
+        item.setText(child);
         return convertView;
     }
  

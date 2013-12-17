@@ -24,9 +24,10 @@
 
     <application
         android:allowBackup="true"
+        android:debuggable="true"
         android:icon="@drawable/ic_launcher_btc"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme" android:debuggable="true">
+        android:theme="@style/AppTheme" >
         <activity
             android:name="com.fri.tpo.btc.MainActivity"
             android:label="@string/app_name" >
@@ -52,6 +53,10 @@
         <activity
             android:name="com.fri.tpo.btc.HalaActivity"
             android:label="@string/title_activity_hala" >
+        </activity>
+        <activity
+            android:name="com.fri.tpo.btc.IskanjeActivity"
+            android:label="@string/title_activity_iskanje" >
         </activity>
     </application>
 

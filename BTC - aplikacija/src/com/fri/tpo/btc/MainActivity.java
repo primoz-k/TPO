@@ -52,13 +52,13 @@ public class MainActivity extends Activity implements OnMapClickListener {
 		return true;
 	}
 	
-	// odpiranje trgovine
-	public void odpriTrgovino(View v) {
-		Log.i("klik", "odpiranje trgovine");
+	// testni gumb
+	public void testGumb(View v) {
+		Log.i("klik", "testni gumb");
 		
 		// odpre aktivnost za trgovino s podanim hashmapom (trgovino)
-		Intent intent = new Intent(this, TrgovinaActivity.class);
-		intent.putExtra("id", 1);
+		Intent intent = new Intent(this, IskanjeActivity.class);
+		//intent.putExtra("id", -1);
 		this.startActivity(intent);
 	}
 	

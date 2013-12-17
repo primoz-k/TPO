@@ -13,6 +13,7 @@ public class DataTable {
 		data = new ArrayList<HashMap<String, String>>();
 	}
 	
+	// vrne vrednost iz tabele v določeni vrstici
 	public String getString(String column, int row) {
 		if (row >= data.size() || !data.get(row).containsKey(column))
 			return "";
@@ -20,14 +21,17 @@ public class DataTable {
 		return data.get(row).get(column);
 	}
 	
+	// vrne vrednost iz tabele v prvi vrstici
 	public String getString(String column) {
 		return getString(column, 0);
 	}
 	
+	// vrne eno vrstico v tabeli
 	public HashMap<String, String> getRow(int row) {
 		return data.get(row);
 	}
 	
+	// vrne en stolpec v tabeli
 	public ArrayList<String> getColumn(String column) {
 		ArrayList<String> col = new ArrayList<String>(getRowCount());
 		
@@ -37,22 +41,27 @@ public class DataTable {
 		return col;
 	}
 	
+	// število vrstic
 	public int getRowCount() {
 		return data.size();
 	}
 	
+	// število stolpcev
 	public int getColCount() {
 		return data.get(0).size();
 	}
 
+	// dodaj vrstico
 	public void addRow(HashMap<String, String> row) {
 		data.add(row);
 	}
 	
+	// ali je tabela prazna
 	public boolean isEmpty() {
 		return data.size() == 0;
 	}
 	
+	// ustvari tabelo iz kurzorja
 	public static DataTable createDataTable(Cursor c) {
 		DataTable dt = new DataTable();
     	
@@ -69,6 +78,7 @@ public class DataTable {
 		return dt;
 	}
 	
+	// vrne celotno tabelo
 	public ArrayList<HashMap<String, String>> getData() {
 		return data;
 	}

@@ -82,7 +82,7 @@ public class TrgovinaActivity extends Activity {
 			markers.add(marker);
 		}
 		
-		
+		// inicializacija zemljevida
 		if (map == null) {
             map = ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap();
  

@@ -16,14 +16,14 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ExpandableListView;
+import android.widget.ExpandableListView.OnChildClickListener;
 import android.widget.ListView;
 import android.widget.Toast;
 
-public class HalaActivity extends Activity {
-
+public class HalaActivity extends Activity implements OnChildClickListener {
 
 	private ExpandableListView elv_kategorije;
-    Map<String, List<String>> kat;
+    private Map<String, List<String>> kat;
 	
 	private int idHale;
 	
@@ -47,29 +47,27 @@ public class HalaActivity extends Activity {
         	kat.put(k, new ArrayList<String>());
         
         // branje trgovin v kategoriji
-        dt = db.getDataTable("SELECT ImeTrgovine, ImeKategorije FROM Trgovina as t NATURAL JOIN KategorijaTrgovine as kt JOIN Kategorija as k ON (k.IDKategorije =kt.IDKategorije) WHERE IDHale = "+ idHale);
+        dt = db.getDataTable("SELECT ImeTrgovine, ImeKategorije, IDTrgovine FROM Trgovina as t NATURAL JOIN KategorijaTrgovine as kt JOIN Kategorija as k ON (k.IDKategorije =kt.IDKategorije) WHERE IDHale = "+ idHale);
         for (HashMap<String, String> row : dt.getData()) {
         	ArrayList<String> l = (ArrayList)kat.get(row.get("ImeKategorije"));
-        	l.add(row.get("ImeTrgovine"));
+        	l.add(row.get("ImeTrgovine")+";"+row.get("IDTrgovine"));
         	kat.put(row.get("ImeKategorije"), l);
         }
  
-        elv_kategorije = (ExpandableListView) findViewById(R.id.elv_kategorije);
-        final ExpandableListAdapter expListAdapter = new ExpandableListAdapter(this, groups, kat);
-        elv_kategorije.setAdapter(expListAdapter);
- 
-        elv_kategorije.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
- 
-            public boolean onChildClick(ExpandableListView parent, View v,
-                    int groupPosition, int childPosition, long id) {
-                final String selected = (String) expListAdapter.getChild(
-                        groupPosition, childPosition);
-                Toast.makeText(getBaseContext(), selected, Toast.LENGTH_LONG)
-                        .show();
- 
-                return true;
-            }
-        });
+        ExpandableListAdapter expListAdapter = new ExpandableListAdapter(this, groups, kat);
+        elv_kategorije = (ExpandableListView)findViewById(R.id.elv_kategorije);
+        elv_kategorije.setAdapter(expListAdapter); 
+        elv_kategorije.setOnChildClickListener(this); // listener za klik na trgovino
+	}
+	
+	@Override
+	public boolean onChildClick(ExpandableListView parent, View v,
+			int groupPosition, int childPosition, long id) {        
+        // odpre aktivnost za trgovino z izbranim idjem
+		Intent intent = new Intent(this, TrgovinaActivity.class);
+		intent.putExtra("id", (int)id);
+		this.startActivity(intent);
+		return true;
 	}
 
 	@Override
