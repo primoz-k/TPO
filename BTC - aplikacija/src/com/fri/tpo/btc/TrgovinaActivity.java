@@ -12,6 +12,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolygonOptions;
 
 import android.os.Bundle;
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
@@ -41,8 +42,10 @@ public class TrgovinaActivity extends Activity {
 		}
 		
 		int idHale = Integer.parseInt(dt.getString("IDHale"));
+		final ActionBar actionBar = getActionBar();
+		//actionBar.setHomeButtonEnabled(true);
 		// polnjenje osnovnih podatkov
-		getActionBar().setTitle(dt.getString("ImeTrgovine") + " (" + dt.getString("ImeHale") + ")");
+		actionBar.setTitle(String.format("%s (%s)", dt.getString("ImeTrgovine"), dt.getString("ImeHale")));
 		((TextView)findViewById(R.id.tv_telefon)).setText(dt.getString("Telefon"));
 		((TextView)findViewById(R.id.tv_email)).setText(dt.getString("Email"));
 		((TextView)findViewById(R.id.tv_spletnaStran)).setText(dt.getString("SpletnaStran"));

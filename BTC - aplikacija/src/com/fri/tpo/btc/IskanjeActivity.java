@@ -42,12 +42,14 @@ public class IskanjeActivity extends FragmentActivity implements ActionBar.TabLi
 		
 		idHale = getIntent().getIntExtra("id", -1);
 		String imeHale = db.getDataTable("SELECT ImeHale FROM Hala WHERE IDHale = " + idHale).getString("ImeHale");
-		getActionBar().setTitle(String.format("Iskanje trgovin (%s)", idHale == -1 ? "vse hale" : imeHale));
+		String title = String.format("Iskanje trgovin (%s)", idHale == -1 ? "vse hale" : imeHale);
 
 
 		// Set up the action bar.
 		final ActionBar actionBar = getActionBar();
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+		//actionBar.setHomeButtonEnabled(true);
+		actionBar.setTitle(title);
 
 		// Create the adapter that will return a fragment for each of the three
 		// primary sections of the app.

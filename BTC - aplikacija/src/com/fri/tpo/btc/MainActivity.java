@@ -54,15 +54,16 @@ public class MainActivity extends Activity implements OnMapClickListener {
 	
 	// iskanje trgovin
 	public void iskanjeTrgovin(View v) {
-		// odpre aktivnost za trgovino brez id-ja (vse hale)
+		// odpre aktivnost za iskanje trgovin brez id-ja (vse hale)
 		Intent intent = new Intent(this, IskanjeActivity.class);
 		this.startActivity(intent);
 	}
 	
 	// iskanje tock interesa
 	public void iskanjePOI(View v) {
-		Log.i("info", "KLIK NA ISKANJE POI");
-		Toast.makeText(getApplicationContext(), "ne ne, ni kaj :)", Toast.LENGTH_SHORT).show();
+		// odpre aktivnost za iskanje tock interesa
+		Intent intent = new Intent(this, IskanjePOIActivity.class);
+		this.startActivity(intent);
 	}
 	
 	// inicializacija zemljevida
