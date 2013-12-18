@@ -12,21 +12,29 @@
     tools:context=".MainActivity" >
     
     <Button
-        android:id="@+id/button1"
+        android:id="@+id/bt_iskanje"
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:onClick="testGumb"
-        android:text="Iskanje trgovin" />
+        android:onClick="iskanjeTrgovin"
+        android:text="Iskanje vseh trgovin" />
+    
+    <Button
+        android:id="@+id/bt_poi"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_below="@id/bt_iskanje"
+        android:onClick="iskanjePOI"
+        android:text="Iskanje točk interesa" />
 
 	<TextView
 	    android:id="@+id/textView1"
-	    android:layout_width="wrap_content"
+	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
+	    android:layout_below="@id/bt_poi"
 	    android:layout_margin="6dp"
-	    android:text="Klikni na halo na zemljevidu, da se odpre aktivnost za halo.\nKlikni na trgovino v hali CityPark pod kategorijo Moda za aktivnost za trgovino"
+	    android:text="Klikni na halo na zemljevidu za iskanje trgovin samo v tisti hali.\nKlikni na gumb Iskanje trgovin za iskanje vseh trgovin."
 	    android:textAlignment="center"
-	    android:textSize="10sp" 
-	    android:layout_below="@id/button1"/>
+	    android:textSize="10sp" />
 	
 	<fragment
 	    android:id="@+id/map"

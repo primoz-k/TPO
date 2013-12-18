@@ -41,6 +41,11 @@ public class DataTable {
 		return col;
 	}
 	
+	// vrne celotno tabelo - vse vrstice
+	public ArrayList<HashMap<String, String>> getRow() {
+		return data;
+	}
+	
 	// število vrstic
 	public int getRowCount() {
 		return data.size();
@@ -78,8 +83,5 @@ public class DataTable {
 		return dt;
 	}
 	
-	// vrne celotno tabelo
-	public ArrayList<HashMap<String, String>> getData() {
-		return data;
-	}
+	
 }

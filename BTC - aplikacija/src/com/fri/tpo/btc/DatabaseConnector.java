@@ -112,4 +112,13 @@ public class DatabaseConnector extends SQLiteOpenHelper{
 	        
 	    	return t;
 	    }
+	    
+	    // vrne cursor ... potreben za listview adapter
+	    public Cursor getCursor(String query) {
+	    	startDatabase();
+	    	Cursor c = myDatabase.rawQuery(query, null);
+	    	//close();
+	    	
+	    	return c;
+	    }
 }

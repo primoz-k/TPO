@@ -52,14 +52,17 @@ public class MainActivity extends Activity implements OnMapClickListener {
 		return true;
 	}
 	
-	// testni gumb
-	public void testGumb(View v) {
-		Log.i("klik", "testni gumb");
-		
-		// odpre aktivnost za trgovino s podanim hashmapom (trgovino)
+	// iskanje trgovin
+	public void iskanjeTrgovin(View v) {
+		// odpre aktivnost za trgovino brez id-ja (vse hale)
 		Intent intent = new Intent(this, IskanjeActivity.class);
-		//intent.putExtra("id", -1);
 		this.startActivity(intent);
+	}
+	
+	// iskanje tock interesa
+	public void iskanjePOI(View v) {
+		Log.i("info", "KLIK NA ISKANJE POI");
+		Toast.makeText(getApplicationContext(), "ne ne, ni kaj :)", Toast.LENGTH_SHORT).show();
 	}
 	
 	// inicializacija zemljevida
@@ -73,18 +76,12 @@ public class MainActivity extends Activity implements OnMapClickListener {
                 // listener za klik na mapo
                 map.setOnMapClickListener(this);
                 // nastavi kamero na BTC
-                map.moveCamera(CameraUpdateFactory.newLatLngZoom(ZACETEK, 15));
+                map.moveCamera(CameraUpdateFactory.newLatLngZoom(ZACETEK, 16));
                 // onemogoci interacije
                 map.getUiSettings().setRotateGesturesEnabled(false);
                 map.getUiSettings().setTiltGesturesEnabled(false);
                 
                 ustvariPoligone();
-
-                // test za marker
-                /*MarkerOptions marker = new MarkerOptions();
-                marker.position(new LatLng(46.067589, 14.545394));
-                marker.title("Vhod v halo");
-                map.addMarker(marker);*/
             } else {
             	Toast.makeText(getApplicationContext(), "Karta ni narejena!", Toast.LENGTH_SHORT).show();
             }
@@ -108,8 +105,11 @@ public class MainActivity extends Activity implements OnMapClickListener {
         		continue;
         	
         	// dodamo tocke v polygon
-        	for (int i = 0; i < obrisiLok.getRowCount(); i++)
-        		poly.add(new LatLng(Double.parseDouble(obrisiLok.getString("LokacijaLat", i)), Double.parseDouble(obrisiLok.getString("LokacijaLong", i))));
+        	for (HashMap<String, String> row : obrisiLok.getRow()) {
+        		double lat = Double.parseDouble(row.get("LokacijaLat"));
+        		double lng = Double.parseDouble(row.get("LokacijaLong"));
+        		poly.add(new LatLng(lat, lng));
+        	}
         	
         	// dodamo obrise v array za racunanje dotikov
         	obrisi.put(Integer.parseInt(id), map.addPolygon(poly));
@@ -124,7 +124,7 @@ public class MainActivity extends Activity implements OnMapClickListener {
     	for (int id : obrisi.keySet()) {
     		if (vsebuje(obrisi.get(id), klik)) {
     			// odpre aktivnost za halo
-    			Intent intent = new Intent(this, HalaActivity.class);
+    			Intent intent = new Intent(this, IskanjeActivity.class);
     			intent.putExtra("id", id);
     			this.startActivity(intent);
     			break;

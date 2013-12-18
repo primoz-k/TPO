@@ -43,7 +43,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
             convertView = inflater.inflate(R.layout.child_item, null);
         }
  
-        TextView item = (TextView) convertView.findViewById(R.id.laptop);
+        TextView item = (TextView) convertView.findViewById(R.id.child);
         child = child.split(";")[0];
         item.setText(child);
         return convertView;
@@ -74,7 +74,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
             convertView = infalInflater.inflate(R.layout.group_item,
                     null);
         }
-        TextView item = (TextView) convertView.findViewById(R.id.laptop);
+        TextView item = (TextView) convertView.findViewById(R.id.group);
         item.setTypeface(null, Typeface.BOLD);
         item.setText(kategorija);
         return convertView;
