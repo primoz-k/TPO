@@ -48,7 +48,7 @@ public class IskanjeActivity extends FragmentActivity implements ActionBar.TabLi
 		// Set up the action bar.
 		final ActionBar actionBar = getActionBar();
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-		//actionBar.setHomeButtonEnabled(true);
+		actionBar.setHomeButtonEnabled(true); // omogoci BACK gumb
 		actionBar.setTitle(title);
 
 		// Create the adapter that will return a fragment for each of the three

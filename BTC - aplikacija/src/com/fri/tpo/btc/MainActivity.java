@@ -27,7 +27,7 @@ public class MainActivity extends Activity implements OnMapClickListener {
 	
 	private GoogleMap map; // glavni zemljevid
 	private HashMap<Integer, Polygon> obrisi; // obrisi hal (ID -> OBRIS)
-	private final LatLng ZACETEK = new LatLng(46.067008, 14.544182); // zacetna pozicija kamere
+	public static final LatLng ZACETEK = new LatLng(46.067008, 14.544182); // zacetna pozicija kamere
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -106,7 +106,7 @@ public class MainActivity extends Activity implements OnMapClickListener {
         		continue;
         	
         	// dodamo tocke v polygon
-        	for (HashMap<String, String> row : obrisiLok.getRow()) {
+        	for (HashMap<String, String> row : obrisiLok.getRows()) {
         		double lat = Double.parseDouble(row.get("LokacijaLat"));
         		double lng = Double.parseDouble(row.get("LokacijaLong"));
         		poly.add(new LatLng(lat, lng));

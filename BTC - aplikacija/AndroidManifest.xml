@@ -39,7 +39,7 @@
         </activity>
         <activity
             android:name="com.fri.tpo.btc.TrgovinaActivity"
-            android:label="@string/title_activity_trgovina">
+            android:label="@string/title_activity_trgovina" >
         </activity>
 
         <!-- Google Maps API Key -->
@@ -56,7 +56,8 @@
         </activity>
         <activity
             android:name="com.fri.tpo.btc.IskanjeActivity"
-            android:label="@string/title_activity_iskanje" >
+            android:label="@string/title_activity_iskanje"
+            android:parentActivityName="com.fri.tpo.btc.MainActivity" >
         </activity>
         <activity
             android:name="com.fri.tpo.btc.IskanjePOIActivity"

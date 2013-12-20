@@ -42,7 +42,7 @@ public class DataTable {
 	}
 	
 	// vrne celotno tabelo - vse vrstice
-	public ArrayList<HashMap<String, String>> getRow() {
+	public ArrayList<HashMap<String, String>> getRows() {
 		return data;
 	}
 	

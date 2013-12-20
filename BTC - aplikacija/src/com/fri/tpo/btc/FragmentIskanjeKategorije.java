@@ -46,7 +46,7 @@ public class FragmentIskanjeKategorije extends Fragment implements OnChildClickL
         if (idHale != -1)
         	query += " WHERE IDHale = " + idHale;
         dt = db.getDataTable(query);
-        for (HashMap<String, String> row : dt.getRow()) {
+        for (HashMap<String, String> row : dt.getRows()) {
         	ArrayList<String> l = (ArrayList)kat.get(row.get("ImeKategorije"));
         	l.add(row.get("ImeTrgovine")+";"+row.get("IDTrgovine"));
         	kat.put(row.get("ImeKategorije"), l);

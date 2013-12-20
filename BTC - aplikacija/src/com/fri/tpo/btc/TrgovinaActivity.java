@@ -73,13 +73,13 @@ public class TrgovinaActivity extends Activity {
 		dt = db.getDataTable("SELECT LokacijaLat, LokacijaLong FROM Obris WHERE IDHale = " + idHale);
 		PolygonOptions poly = new PolygonOptions();
 		poly.strokeWidth(0).fillColor(Color.argb(80, 255, 0, 0));
-		for (HashMap<String, String> d : dt.getRow())
+		for (HashMap<String, String> d : dt.getRows())
 			poly.add(new LatLng(Double.parseDouble(d.get("LokacijaLat")), Double.parseDouble(d.get("LokacijaLong"))));
 		
 		// vhodi
 		ArrayList<MarkerOptions> markers = new ArrayList<MarkerOptions>();
 		dt = db.getDataTable("SELECT LokacijaLat, LokacijaLong FROM Vhod WHERE IDHale = " + idHale);
-		for (HashMap<String, String> d : dt.getRow()) {
+		for (HashMap<String, String> d : dt.getRows()) {
 			MarkerOptions marker = new MarkerOptions();
 			marker.position(new LatLng(Double.parseDouble(d.get("LokacijaLat")), Double.parseDouble(d.get("LokacijaLong"))));
 			markers.add(marker);
@@ -87,7 +87,7 @@ public class TrgovinaActivity extends Activity {
 		
 		// inicializacija zemljevida
 		if (map == null) {
-            map = ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap();
+            map = ((MapFragment) getFragmentManager().findFragmentById(R.id.mapTrgovina)).getMap();
  
             // ce je zemljevid ustvarjen
             if (map != null) {
