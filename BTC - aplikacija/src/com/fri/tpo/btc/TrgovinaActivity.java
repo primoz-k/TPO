@@ -5,9 +5,11 @@ import java.util.HashMap;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.GoogleMap.OnInfoWindowClickListener;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolygonOptions;
 
@@ -21,7 +23,7 @@ import android.view.Menu;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class TrgovinaActivity extends Activity {
+public class TrgovinaActivity extends Activity implements OnInfoWindowClickListener{
 	
 	private int idTrgovine;
 	private GoogleMap map;
@@ -44,6 +46,7 @@ public class TrgovinaActivity extends Activity {
 		int idHale = Integer.parseInt(dt.getString("IDHale"));
 		final ActionBar actionBar = getActionBar();
 		//actionBar.setHomeButtonEnabled(true);
+		
 		// polnjenje osnovnih podatkov
 		actionBar.setTitle(String.format("%s (%s)", dt.getString("ImeTrgovine"), dt.getString("ImeHale")));
 		((TextView)findViewById(R.id.tv_telefon)).setText(dt.getString("Telefon"));
@@ -82,31 +85,42 @@ public class TrgovinaActivity extends Activity {
 		for (HashMap<String, String> d : dt.getRows()) {
 			MarkerOptions marker = new MarkerOptions();
 			marker.position(new LatLng(Double.parseDouble(d.get("LokacijaLat")), Double.parseDouble(d.get("LokacijaLong"))));
+			marker.title("Vhod v halo").snippet("Klikni za prikaz poti");
 			markers.add(marker);
 		}
 		
 		// inicializacija zemljevida
-		if (map == null) {
-            map = ((MapFragment) getFragmentManager().findFragmentById(R.id.mapTrgovina)).getMap();
- 
-            // ce je zemljevid ustvarjen
-            if (map != null) {
-                // nastavi kamero na halo
-                map.moveCamera(CameraUpdateFactory.newLatLngBounds(hala, 300, 300, 0));
-                // onemogoci interacije
-                map.getUiSettings().setAllGesturesEnabled(false);
-                map.getUiSettings().setZoomControlsEnabled(false);
-                
-                // obris
-                map.addPolygon(poly);
+		try {
+			map = MapHelper.inicializirajZemljevid(this, R.id.mapTrgovina);
+			// listener za klik na info
+			map.setOnInfoWindowClickListener(this);
+			// kamera na halo
+			map.moveCamera(CameraUpdateFactory.newLatLngBounds(hala, 300, 300, 0));
+            // onemogoci interacije
+            map.getUiSettings().setAllGesturesEnabled(false);
+            map.getUiSettings().setZoomControlsEnabled(false);
+            
+            // obris
+            map.addPolygon(poly);
 
-                // vhodi
-                for (MarkerOptions m : markers)
-                	map.addMarker(m);
-            } else {
-            	Toast.makeText(getApplicationContext(), "Karta ni narejena!", Toast.LENGTH_SHORT).show();
-            }
-        }
+            // vhodi
+            for (MarkerOptions m : markers)
+            	map.addMarker(m);
+		} catch (Exception e) {
+			Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+		}
+	}
+	
+	// klik za prikaz poti
+	@Override
+	public void onInfoWindowClick(Marker m) {
+		LatLng pos = m.getPosition();
+		double lat = pos.latitude, lng = pos.longitude;
+		
+		Intent intent = new Intent(this, PotActivity.class);
+		intent.putExtra("lat", lat);
+		intent.putExtra("lng", lng);
+		startActivity(intent);
 	}
 
 	@Override

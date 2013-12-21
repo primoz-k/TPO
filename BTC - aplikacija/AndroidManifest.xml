@@ -67,6 +67,10 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.fri.tpo.btc.MainActivity" />
         </activity>
+        <activity
+            android:name="com.fri.tpo.btc.PotActivity"
+            android:label="@string/title_activity_pot" >
+        </activity>
     </application>
 
 </manifest>

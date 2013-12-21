@@ -1,6 +1,5 @@
 package com.fri.tpo.btc;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -13,12 +12,9 @@ import android.view.Menu;
 import android.view.View;
 import android.widget.Toast;
 
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnMapClickListener;
-import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polygon;
 import com.google.android.gms.maps.model.PolygonOptions;
 
@@ -27,7 +23,6 @@ public class MainActivity extends Activity implements OnMapClickListener {
 	
 	private GoogleMap map; // glavni zemljevid
 	private HashMap<Integer, Polygon> obrisi; // obrisi hal (ID -> OBRIS)
-	public static final LatLng ZACETEK = new LatLng(46.067008, 14.544182); // zacetna pozicija kamere
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -36,12 +31,13 @@ public class MainActivity extends Activity implements OnMapClickListener {
 		
 		db = new DatabaseConnector(this);
 
-	    // nalozi mapo
+	    // inicializacija zemljevida
 	    try {
-            inicializirajZemljevid(); 
+            map = MapHelper.inicializirajZemljevid(this, R.id.map);
+            map.setOnMapClickListener(this);
+            ustvariPoligone();
         } catch (Exception e) {
-            e.printStackTrace();
-            Toast.makeText(getApplicationContext(), "Napaka ob inicializaciji zemljevida:\n" + e.getMessage(), Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
         }
 	}
 	
@@ -65,29 +61,6 @@ public class MainActivity extends Activity implements OnMapClickListener {
 		Intent intent = new Intent(this, IskanjePOIActivity.class);
 		this.startActivity(intent);
 	}
-	
-	// inicializacija zemljevida
-	// https://developers.google.com/maps/documentation/android/views - dokumentacija za gMaps API
-    private void inicializirajZemljevid() {
-        if (map == null) {
-            map = ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap();
- 
-            // ce je zemljevid ustvarjen
-            if (map != null) {
-                // listener za klik na mapo
-                map.setOnMapClickListener(this);
-                // nastavi kamero na BTC
-                map.moveCamera(CameraUpdateFactory.newLatLngZoom(ZACETEK, 16));
-                // onemogoci interacije
-                map.getUiSettings().setRotateGesturesEnabled(false);
-                map.getUiSettings().setTiltGesturesEnabled(false);
-                
-                ustvariPoligone();
-            } else {
-            	Toast.makeText(getApplicationContext(), "Karta ni narejena!", Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
     
     // ustvarjanje poligonov za hale
     private void ustvariPoligone() {

@@ -11,114 +11,111 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
+public class DatabaseConnector extends SQLiteOpenHelper {
 
-public class DatabaseConnector extends SQLiteOpenHelper{
-	
-		private static String DB_PATH = "data/data/com.fri.tpo.btc/databases/";
-	    private static String DB_NAME = "baza.sqlite3";
-	    private SQLiteDatabase myDatabase;
-	    private final Context myContext;
-	    private final boolean recreate = false; // daj to na TRUE ce se spreminja baza da jo ponovno zgradi in nazaj na FALSE
-	    
-	    public DatabaseConnector(Context context){
-	        super(context, DB_NAME, null, 1);
-	        this.myContext = context;
-	    }
-	    private void createDataBase() throws IOException{
-	    	 
-	    	boolean dbExist = checkDataBase();
-	    	// ce baza se ne obstaja jo prekopiramo iz assets v bazo za branje
-	    	if (recreate || !dbExist){
-	        	this.getReadableDatabase();
-    			copyDataBase();
-	    	}
-	 
-	    }
-	    
-	    private void openDataBase() throws SQLException{
-	        this.myDatabase = this.getReadableDatabase();
-	    }
-	    
-	    public void startDatabase(){
-	    	 try {
-	         	 createDataBase();
-	         	 openDataBase();
-	    	 } catch (IOException e) { 
-	    		 throw new Error("Unable to create database");	
-	    	 } catch (SQLException e){
-		  		 throw e;
-		  	}
-	    }
-	    
-	    private boolean checkDataBase(){
-	    	 
-	    	SQLiteDatabase checkDB = null;
-	 
-	    	try {
-	    		
-	    		String myPath = DB_PATH + DB_NAME;
-	    		checkDB = SQLiteDatabase.openDatabase(myPath, null, SQLiteDatabase.OPEN_READONLY);
-	    		
-	    	} catch(SQLiteException e){}
-	 
-	    	if(checkDB != null) checkDB.close();
-	 
-	    	return checkDB != null ? true : false;
-	    }
-	    
-	    public synchronized void close(){
-	        if(myDatabase != null)
-	            myDatabase.close();
-	        super.close();
+	private static String DB_NAME = "baza.sqlite3";
+	private SQLiteDatabase myDatabase;
+	private final Context myContext;
+	private boolean upgraded = false; // ali je baza posodobljena
 
-	    }
-	    
-	    private void copyDataBase() throws IOException{
-	    	InputStream myInput = myContext.getAssets().open(DB_NAME);
-	    	String outFileName = DB_PATH + DB_NAME;
-	    	OutputStream myOutput = new FileOutputStream(outFileName);
-	 
-	    	//transfer bytes from the inputfile to the outputfile
-	    	byte[] buffer = new byte[1024];
-	    	int length;
-	    	while ((length = myInput.read(buffer))>0){
-	    		myOutput.write(buffer, 0, length);
-	    	}
-	 
-	    	//Close the streams
-	    	myOutput.flush();
-	    	myOutput.close();
-	    	myInput.close();
-	 
-	    }
-		
-	    @Override
-		public void onCreate(SQLiteDatabase arg0) {
+	public DatabaseConnector(Context context) {
+		super(context, DB_NAME, null, 5); // TODO ZA UPGRADE BAZE POVECAJ TO STEVILO
+		this.myContext = context;
+
+		// na zacetku ustvari bazo / posodobi bazo
+		this.getReadableDatabase();
+		try {
+			createDataBase();
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+	}
+
+	private void createDataBase() throws IOException {
+
+		// ce baza se ne obstaja ALI je posodobljena
+		if (upgraded || !dbExists()) {
+			upgraded = false;
+			copyDataBase(); // kopija iz assets na telefon
+		}
+		Log.i("info", "klic createDataBase");
+	}
+
+	private void openDataBase() throws SQLException {
+		this.myDatabase = this.getReadableDatabase();
+	}
+
+	public void startDatabase() {
+		Log.i("info", "klic startDatabase");
+		try {
+			openDataBase();
+		} catch (SQLException e) {
+			throw e;
+		}
+	}
+
+	public synchronized void close() {
+		if (myDatabase != null)
+			myDatabase.close();
+		super.close();
+	}
+
+	private void copyDataBase() throws IOException {
+		InputStream myInput = myContext.getAssets().open(DB_NAME);
+		OutputStream myOutput = new FileOutputStream(
+				myContext.getDatabasePath(DB_NAME));
+
+		// transfer bytes from the inputfile to the outputfile
+		byte[] buffer = new byte[1024];
+		int length;
+		while ((length = myInput.read(buffer)) > 0) {
+			myOutput.write(buffer, 0, length);
 		}
 
-		@Override
-		public void onUpgrade(SQLiteDatabase arg0, int arg1, int arg2) {
-		}
-		
-		// vrne zgrajeno data tabelo
-	    // TODO predelaj da bo odporen na SQL injection
-	    public DataTable getDataTable(String query) {	    	
-	    	startDatabase();
-	    	Cursor cursor = myDatabase.rawQuery(query, null);
-	    	
-	    	DataTable t = DataTable.createDataTable(cursor);
-	        close();
-	        
-	    	return t;
-	    }
-	    
-	    // vrne cursor ... potreben za listview adapter
-	    public Cursor getCursor(String query) {
-	    	startDatabase();
-	    	Cursor c = myDatabase.rawQuery(query, null);
-	    	//close();
-	    	
-	    	return c;
-	    }
+		// Close the streams
+		myOutput.flush();
+		myOutput.close();
+		myInput.close();
+
+		Log.i("info", "klic copyDataBase");
+	}
+
+	@Override
+	public void onCreate(SQLiteDatabase arg0) {
+		Log.i("info", "klic onCreate");
+	}
+
+	@Override
+	public void onUpgrade(SQLiteDatabase db, int v1, int v2) {
+		Log.i("info", "klic onUpgrade");
+		upgraded = true;
+	}
+
+	// ali baza ze obstaja
+	private boolean dbExists() {
+		return myContext.getDatabasePath(DB_NAME).exists();
+	}
+
+	// vrne zgrajeno data tabelo
+	// TODO predelaj da bo odporen na SQL injection
+	public DataTable getDataTable(String query) {
+		startDatabase();
+		Cursor cursor = myDatabase.rawQuery(query, null);
+
+		DataTable t = DataTable.createDataTable(cursor);
+		close();
+
+		return t;
+	}
+
+	// vrne cursor ... potreben za listview adapter
+	public Cursor getCursor(String query) {
+		startDatabase();
+		Cursor c = myDatabase.rawQuery(query, null);
+		// close();
+
+		return c;
+	}
 }

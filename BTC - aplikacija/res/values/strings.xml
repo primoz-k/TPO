@@ -10,5 +10,6 @@
     <string name="title_tab2">Abecedni</string>
     <string name="title_tab3">Ključna beseda</string>
     <string name="title_activity_iskanje_poi">Točke interesa</string>
+    <string name="title_activity_pot">Prikaz poti</string>
 
 </resources>
