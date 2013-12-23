@@ -1,7 +1,14 @@
 package com.fri.tpo.btc;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.net.URLConnection;
+
 import android.app.Activity;
 import android.location.Location;
+import android.os.AsyncTask;
+import android.os.AsyncTask.Status;
 import android.os.Bundle;
 import android.view.Menu;
 import android.widget.Toast;
@@ -20,27 +27,28 @@ import com.google.android.gms.maps.model.MarkerOptions;
 public class PotActivity extends Activity implements LocationListener, ConnectionCallbacks, OnConnectionFailedListener {
 	
 	private GoogleMap map;
+	private Directions directions;
 	private LocationClient location;
 	private LocationRequest locRequest;
-	
-	/**
-	 * TODO: sparsaj podatke iz JSONa da dobis polygon path za pot
-	EXAMPLE:
-	http://maps.googleapis.com/maps/api/directions/json?origin=46.064998,14.544160&destination=46.068839,14.546521&sensor=false&mode=walking
-	 */
+
+	private LatLng end;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_pot);
 		
+		directions = new Directions();
+		
 		try {
 			map = MapHelper.inicializirajZemljevid(this, R.id.mapPot);
 			map.setMyLocationEnabled(true);
 			
-			LatLng marker = new LatLng(getIntent().getDoubleExtra("lat", 0), getIntent().getDoubleExtra("lng", 0));
-			map.addMarker(new MarkerOptions().position(marker));
-			map.moveCamera(CameraUpdateFactory.newLatLng(marker));
+			// lokacija cilja
+			double lat = getIntent().getDoubleExtra("lat", MapHelper.ZACETEK.latitude);
+			double lng = getIntent().getDoubleExtra("lng", MapHelper.ZACETEK.longitude);
+			end = new LatLng(lat, lng);
+			map.moveCamera(CameraUpdateFactory.newLatLng(end));
 			
 			// dobimo trenutno lokacijo
 			locRequest = LocationRequest.create();
@@ -48,16 +56,33 @@ public class PotActivity extends Activity implements LocationListener, Connectio
 			locRequest.setInterval(10000); // 10s
 			locRequest.setFastestInterval(5000); // 5s
 			location = new LocationClient(this, this, this);
-			
+
 		} catch (Exception e) {
 			Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
 		}
 	}
 	
+	// ob spremembi pozicije
 	@Override
 	public void onLocationChanged(Location l) {
-		map.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(l.getLatitude(), l.getLongitude())));
-		Toast.makeText(getApplicationContext(), l.getLatitude() + " - " + l.getLongitude(), Toast.LENGTH_SHORT).show();
+		LatLng pos = new LatLng(l.getLatitude(), l.getLongitude());
+		pos = MapHelper.ZACETEK; // HACK POBRISI - ZA DEBUG ---------------------------------------------------------------------------------------------------
+		// preveri ce je kamera znotraj mej
+		if (MapHelper.BOUNDS.contains(pos)) {
+			String url = String.format("http://maps.googleapis.com/maps/api/directions/json?origin=%s,%s&destination=%s,%s&sensor=true&mode=walking", 
+					pos.latitude, pos.longitude, end.latitude, end.longitude);
+
+			// stanje taska v ozadju
+			if (directions.getStatus() == Status.FINISHED)
+				directions = new Directions();
+			if (directions.getStatus() == Status.PENDING)
+				directions.execute(url);
+			
+			// priblizaj na trenutno mesto
+			map.animateCamera(CameraUpdateFactory.newLatLngZoom(pos, 18));
+		} else {
+			Toast.makeText(getApplicationContext(), "Ne nahajate se na obmocju BTC City!", Toast.LENGTH_LONG).show();
+		}
 	}
 	
 	@Override
@@ -97,6 +122,41 @@ public class PotActivity extends Activity implements LocationListener, Connectio
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.pot, menu);
 		return true;
+	}
+	
+	private void izrisiPot(String json) {
+		// doda crto na zemljevid
+		if (json != null) {
+			map.clear();
+			map.addPolyline(MapHelper.parseDirections(json));
+			map.addMarker(new MarkerOptions().position(end));
+		}
+	}
+	
+	// dobi navodila za pot na drugi niti iz streznika
+	private class Directions extends AsyncTask<String, Void, String> {
+		@Override
+		protected String doInBackground(String... urls) {
+			try {
+				StringBuilder sb = new StringBuilder();
+		        URLConnection conn = new URL(urls[0]).openConnection();
+		        BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+		        String inputLine;
+		        while ((inputLine = in.readLine()) != null) 
+		            sb.append(inputLine);
+		        in.close();
+		        
+		        return sb.toString();
+			} catch (Exception e) {
+				return null;
+			}
+		}
+		
+		@Override
+		protected void onPostExecute(String result) {
+			izrisiPot(result);
+			super.onPostExecute(result);
+		}
 	}
 
 }
