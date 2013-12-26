@@ -1,37 +1,43 @@
 package com.fri.tpo.btc;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 
 import android.database.Cursor;
 
 public class DataTable {
-	private ArrayList<HashMap<String, String>> data;
+	private ArrayList<HashMap<String, String>> data; // podatki iz baze
 	
 	public DataTable() {
 		data = new ArrayList<HashMap<String, String>>();
 	}
 	
-	// vrne vrednost iz tabele v določeni vrstici
+	/*
+	 * Vrednost v tabeli na doloceni vstici
+	 */
 	public String getString(String column, int row) {
 		if (row >= data.size() || !data.get(row).containsKey(column))
 			return "";
-		
 		return data.get(row).get(column);
 	}
 	
-	// vrne vrednost iz tabele v prvi vrstici
+	/*
+	 * Vrednost v tabeli na prvi vrstici
+	 */
 	public String getString(String column) {
 		return getString(column, 0);
 	}
 	
-	// vrne eno vrstico v tabeli
+	/*
+	 * Ena vrstica v tabeli
+	 */
 	public HashMap<String, String> getRow(int row) {
 		return data.get(row);
 	}
 	
-	// vrne en stolpec v tabeli
+	/*
+	 * Podatki iz podanega stolpca
+	 */
 	public ArrayList<String> getColumn(String column) {
 		ArrayList<String> col = new ArrayList<String>(getRowCount());
 		
@@ -41,32 +47,44 @@ public class DataTable {
 		return col;
 	}
 	
-	// vrne celotno tabelo - vse vrstice
+	/*
+	 * Vse vrstice v tabeli
+	 */
 	public ArrayList<HashMap<String, String>> getRows() {
 		return data;
 	}
 	
-	// število vrstic
+	/*
+	 * Stevilo vrstic v tabeli
+	 */
 	public int getRowCount() {
 		return data.size();
 	}
 	
-	// število stolpcev
+	/*
+	 * Stevilo stolpcev v tabeli
+	 */
 	public int getColCount() {
-		return data.get(0).size();
+		return data.size() > 0 ? data.get(0).size() : 0;
 	}
 
-	// dodaj vrstico
+	/*
+	 * Dodajanje vrstice v tabelo
+	 */
 	public void addRow(HashMap<String, String> row) {
 		data.add(row);
 	}
 	
-	// ali je tabela prazna
+	/*
+	 * Ali je tabela prazna
+	 */
 	public boolean isEmpty() {
 		return data.size() == 0;
 	}
 	
-	// ustvari tabelo iz kurzorja
+	/*
+	 * Ustvarjanje tabele iz kurzorja
+	 */
 	public static DataTable createDataTable(Cursor c) {
 		DataTable dt = new DataTable();
     	

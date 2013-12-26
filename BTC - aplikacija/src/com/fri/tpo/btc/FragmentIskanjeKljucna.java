@@ -10,16 +10,13 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 
 public class FragmentIskanjeKljucna extends Fragment implements OnItemClickListener, OnClickListener {
-	
-	
+
 	private ListView lv_kljucna;
-	private Button bt_isci;
 	private EditText et_vnosIskanja;
 	
 	private int idHale;
@@ -32,8 +29,9 @@ public class FragmentIskanjeKljucna extends Fragment implements OnItemClickListe
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		View rootView = inflater.inflate(R.layout.fragment_iskanje_kljucna, container, false);
-		bt_isci = (Button)rootView.findViewById(R.id.bt_isci);
-		bt_isci.setOnClickListener(this);
+		// klik na gumb
+		rootView.findViewById(R.id.bt_isci).setOnClickListener(this);
+		
 		et_vnosIskanja = (EditText)rootView.findViewById(R.id.et_vnosIskanja);
 		lv_kljucna = (ListView)rootView.findViewById(R.id.lv_kljucna);
 		
@@ -44,6 +42,9 @@ public class FragmentIskanjeKljucna extends Fragment implements OnItemClickListe
 		return rootView;
 	}
 	
+	/*
+	 * Klik na otroka listview, ki odpre trgovino
+	 */
 	@Override
 	public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
 		// odpre izbrano trgovino
@@ -52,21 +53,25 @@ public class FragmentIskanjeKljucna extends Fragment implements OnItemClickListe
 		this.startActivity(intent);
 	}
 	
-	// klik na gumb za iskanje
+	/*
+	 * Klik na gumb za iskanje
+	 */
 	@Override
 	public void onClick(View v) {
 		// iskanje po kljucni besedi
 		isci(et_vnosIskanja.getText().toString());
 	}
 	
+	/*
+	 * Iskanje trgovine po kljucni besedi
+	 */
 	private void isci(String kljucna) {
 		DatabaseConnector db = new DatabaseConnector(getActivity());
 		 
 		// vse trgovino v doloceni hali/vseh halah
-		String query = "SELECT IDTrgovine as _id, * FROM Trgovina WHERE ImeTrgovine LIKE '" + kljucna + "%'";
-		if (idHale != -1)
-			query += " AND IDHale = " + idHale;
-		query += " ORDER BY ImeTrgovine";
+		String query = String.format("SELECT IDTrgovine as _id, * FROM Trgovina WHERE ImeTrgovine LIKE '%s' %s ORDER BY ImeTrgovine;", 
+				kljucna, idHale != -1 ? "AND IDHale = " + idHale : "");
+
         Cursor cursor = db.getCursor(query);
         // polnjenje listview-a s podatki
         SimpleCursorAdapter adapter = new SimpleCursorAdapter(getActivity(),

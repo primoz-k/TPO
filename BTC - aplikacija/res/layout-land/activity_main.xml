@@ -11,21 +11,22 @@
 
     <LinearLayout
         android:id="@+id/linearLayout1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent" 
+        android:orientation="vertical">
 
         <ImageButton
             android:id="@+id/ib_iskanje"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
             android:layout_weight="1"
             android:onClick="findShops"
             android:src="@drawable/ic_action_iskanje" />
 
         <ImageButton
             android:id="@+id/ib_iskanejPOI"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
             android:layout_weight="1"
             android:onClick="findPOI"
             android:src="@drawable/ic_action_poi" />
@@ -35,9 +36,9 @@
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" 
-        android:layout_below="@id/linearLayout1"
+        android:layout_toRightOf="@id/linearLayout1"
         android:background="#bbb"
-        android:layout_marginLeft="4dp" 
+        android:layout_marginTop="4dp" 
         android:layout_marginRight="4dp"
         android:layout_marginBottom="4dp"
         android:padding="1dp">

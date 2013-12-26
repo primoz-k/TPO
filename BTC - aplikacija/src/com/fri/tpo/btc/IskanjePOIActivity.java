@@ -44,9 +44,8 @@ public class IskanjePOIActivity extends Activity implements OnItemSelectedListen
 		
 		// inicializacija zemljevida
 		try {
-			map = MapHelper.inicializirajZemljevid(this, R.id.mapPOI);
+			map = MapHelper.initMap(this, R.id.mapPOI);
 			map.setOnInfoWindowClickListener(this); // listener za klik na info okno od markerja
-			//Toast.makeText(getApplicationContext(), "Klikni na oznako za prikaz poti", Toast.LENGTH_LONG).show();
 		} catch (Exception e) {
 			Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
 		}
@@ -54,7 +53,10 @@ public class IskanjePOIActivity extends Activity implements OnItemSelectedListen
 		
 	}
 
-	// na karti prikazi izbran POI
+	
+	/*
+	 * Prikaz izbranih POI na zemljvidu
+	 */
 	private void prikaziPOI(int id) {
 		map.clear(); // pocisti vse markerje
 		
@@ -74,7 +76,9 @@ public class IskanjePOIActivity extends Activity implements OnItemSelectedListen
 		}
 	}
 	
-	// klik na drugo vrsto POI
+	/*
+	 * Klik na drugo vrsto POI
+	 */
 	@Override
     public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
 		prikaziPOI((int)id);
@@ -85,15 +89,16 @@ public class IskanjePOIActivity extends Activity implements OnItemSelectedListen
         // klik mimo
     }
 	
-	// klik na opis markerja
+	/*
+	 * Klik na opis markerja
+	 */
 	@Override
 	public void onInfoWindowClick(Marker m) {
 		LatLng pos = m.getPosition();
-		double lat = pos.latitude, lng = pos.longitude;
 		
 		Intent intent = new Intent(this, PotActivity.class);
-		intent.putExtra("lat", lat);
-		intent.putExtra("lng", lng);
+		intent.putExtra("lat", pos.latitude);
+		intent.putExtra("lng", pos.longitude);
 		startActivity(intent);
 	}
 

@@ -15,10 +15,6 @@ import android.widget.ExpandableListView;
 import android.widget.ExpandableListView.OnChildClickListener;
 
 public class FragmentIskanjeKategorije extends Fragment implements OnChildClickListener {
-	
-	
-	private ExpandableListView elv_kategorije;
-    private Map<String, List<String>> kat;
     
     public FragmentIskanjeKategorije() {
 		
@@ -32,17 +28,17 @@ public class FragmentIskanjeKategorije extends Fragment implements OnChildClickL
 		int idHale = getArguments().getInt("id");
 		
 		DatabaseConnector db = new DatabaseConnector(getActivity());
+		Map<String, List<String>> kat = new HashMap<String, List<String>>();
 		DataTable dt;
         
         // branje kategorij
-        kat = new HashMap<String, List<String>>();
         dt = db.getDataTable("SELECT ImeKategorije FROM Kategorija");
         ArrayList<String> groups = dt.getColumn("ImeKategorije");
         for (String k : groups)
         	kat.put(k, new ArrayList<String>());
         
         // branje trgovin v kategoriji
-        String query = "SELECT ImeTrgovine, ImeKategorije, IDTrgovine FROM Trgovina as t NATURAL JOIN KategorijaTrgovine as kt JOIN Kategorija as k ON (k.IDKategorije =kt.IDKategorije)";
+        String query = "SELECT ImeTrgovine, ImeKategorije, IDTrgovine FROM Trgovina as t NATURAL JOIN KategorijaTrgovine as kt JOIN Kategorija as k ON (k.IDKategorije = kt.IDKategorije)";
         if (idHale != -1)
         	query += " WHERE IDHale = " + idHale;
         dt = db.getDataTable(query);
@@ -51,15 +47,19 @@ public class FragmentIskanjeKategorije extends Fragment implements OnChildClickL
         	l.add(row.get("ImeTrgovine")+";"+row.get("IDTrgovine"));
         	kat.put(row.get("ImeKategorije"), l);
         }
- 
+        
+        // polnjenje listview-a
         ExpandableListAdapter expListAdapter = new ExpandableListAdapter(getActivity(), groups, kat);
-        elv_kategorije = (ExpandableListView)rootView.findViewById(R.id.elv_kategorije);
+        ExpandableListView elv_kategorije = (ExpandableListView)rootView.findViewById(R.id.elv_kategorije);
         elv_kategorije.setAdapter(expListAdapter); 
         elv_kategorije.setOnChildClickListener(this); // listener za klik na trgovino
 		
 		return rootView;
 	}
 	
+	/*
+	 * Klik na otroka kategorije odpre trgovino 
+	 */
 	@Override
 	public boolean onChildClick(ExpandableListView parent, View v,
 			int groupPosition, int childPosition, long id) {

@@ -13,10 +13,7 @@ import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 
 public class FragmentIskanjeAbecedni extends Fragment implements OnItemClickListener {
-	
-	
-	private ListView lv_abecedni;
-    
+
     public FragmentIskanjeAbecedni() {
 		
 	}
@@ -31,15 +28,14 @@ public class FragmentIskanjeAbecedni extends Fragment implements OnItemClickList
 		DatabaseConnector db = new DatabaseConnector(getActivity());
  
 		// vse trgovino v doloceni hali/vseh halah
-		String query = "SELECT IDTrgovine as _id, * FROM Trgovina";
-		if (idHale != -1)
-			query += " WHERE IDHale = " + idHale;
-		query += " ORDER BY ImeTrgovine";
+		String query = String.format("SELECT IDTrgovine as _id, * FROM Trgovina %s ORDER BY ImeTrgovine;", 
+				idHale != -1 ? "WHERE IDHale = " + idHale : "");
+
         Cursor cursor = db.getCursor(query);
         // polnjenje listview-a s podatki
         SimpleCursorAdapter adapter = new SimpleCursorAdapter(getActivity(),
                 R.layout.group_item, cursor, new String[] { "ImeTrgovine" }, new int[] { R.id.group });
-        lv_abecedni = (ListView)rootView.findViewById(R.id.lv_abecedni);
+        ListView lv_abecedni = (ListView)rootView.findViewById(R.id.lv_abecedni);
         lv_abecedni.setAdapter(adapter); 
         lv_abecedni.setOnItemClickListener(this);
         db.close(); // HACK ker nesme biti kurzor prej zaprt
@@ -47,6 +43,9 @@ public class FragmentIskanjeAbecedni extends Fragment implements OnItemClickList
 		return rootView;
 	}
 	
+	/*
+	 * Klik na otroka v listview odpre trgovino
+	 */
 	@Override
 	public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
 		// odpre izbrano trgovino

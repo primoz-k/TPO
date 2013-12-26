@@ -3,25 +3,21 @@ package com.fri.tpo.btc;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import android.app.Activity;
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.Menu;
+import android.widget.TextView;
+import android.widget.Toast;
+
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnInfoWindowClickListener;
-import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolygonOptions;
-
-import android.os.Bundle;
-import android.app.ActionBar;
-import android.app.Activity;
-import android.content.Intent;
-import android.graphics.Color;
-import android.util.Log;
-import android.view.Menu;
-import android.widget.TextView;
-import android.widget.Toast;
 
 public class TrgovinaActivity extends Activity implements OnInfoWindowClickListener{
 	
@@ -39,16 +35,14 @@ public class TrgovinaActivity extends Activity implements OnInfoWindowClickListe
 		
 		DataTable dt = db.getDataTable("SELECT * FROM Trgovina NATURAL JOIN Hala WHERE IDTrgovine = " + idTrgovine);
 		if (dt.isEmpty()) {
-			Toast.makeText(getApplicationContext(), "Trgovine ni v bazi!", Toast.LENGTH_SHORT).show();
+			Toast.makeText(getApplicationContext(), "Trgovine ni v bazi!", Toast.LENGTH_LONG).show();
 			return;
 		}
 		
 		int idHale = Integer.parseInt(dt.getString("IDHale"));
-		final ActionBar actionBar = getActionBar();
-		//actionBar.setHomeButtonEnabled(true);
 		
 		// polnjenje osnovnih podatkov
-		actionBar.setTitle(String.format("%s (%s)", dt.getString("ImeTrgovine"), dt.getString("ImeHale")));
+		getActionBar().setTitle(String.format("%s (%s)", dt.getString("ImeTrgovine"), dt.getString("ImeHale")));
 		((TextView)findViewById(R.id.tv_telefon)).setText(dt.getString("Telefon"));
 		((TextView)findViewById(R.id.tv_email)).setText(dt.getString("Email"));
 		((TextView)findViewById(R.id.tv_spletnaStran)).setText(dt.getString("SpletnaStran"));
@@ -72,26 +66,30 @@ public class TrgovinaActivity extends Activity implements OnInfoWindowClickListe
 		double maxLong = Double.parseDouble(dt.getString("maxLong"));
 		LatLngBounds hala = new LatLngBounds(new LatLng(minLat, minLong), new LatLng(maxLat, maxLong));
 		
-		// obris
+		// obris hale
 		dt = db.getDataTable("SELECT LokacijaLat, LokacijaLong FROM Obris WHERE IDHale = " + idHale);
-		PolygonOptions poly = new PolygonOptions();
-		poly.strokeWidth(0).fillColor(Color.argb(80, 255, 0, 0));
-		for (HashMap<String, String> d : dt.getRows())
-			poly.add(new LatLng(Double.parseDouble(d.get("LokacijaLat")), Double.parseDouble(d.get("LokacijaLong"))));
+		PolygonOptions poly = MapHelper.getOutline();
+		for (HashMap<String, String> d : dt.getRows()) {
+			double lat = Double.parseDouble(d.get("LokacijaLat"));
+			double lng = Double.parseDouble(d.get("LokacijaLong"));
+			poly.add(new LatLng(lat, lng));
+		}
 		
-		// vhodi
+		// vhodi v halo
 		ArrayList<MarkerOptions> markers = new ArrayList<MarkerOptions>();
 		dt = db.getDataTable("SELECT LokacijaLat, LokacijaLong FROM Vhod WHERE IDHale = " + idHale);
 		for (HashMap<String, String> d : dt.getRows()) {
+			double lat = Double.parseDouble(d.get("LokacijaLat"));
+			double lng = Double.parseDouble(d.get("LokacijaLong"));
 			MarkerOptions marker = new MarkerOptions();
-			marker.position(new LatLng(Double.parseDouble(d.get("LokacijaLat")), Double.parseDouble(d.get("LokacijaLong"))));
+			marker.position(new LatLng(lat, lng));
 			marker.title("Vhod v halo").snippet("Klikni za prikaz poti");
 			markers.add(marker);
 		}
 		
 		// inicializacija zemljevida
 		try {
-			map = MapHelper.inicializirajZemljevid(this, R.id.mapTrgovina);
+			map = MapHelper.initMap(this, R.id.mapTrgovina);
 			// listener za klik na info
 			map.setOnInfoWindowClickListener(this);
 			// kamera na halo
@@ -111,15 +109,16 @@ public class TrgovinaActivity extends Activity implements OnInfoWindowClickListe
 		}
 	}
 	
-	// klik za prikaz poti
+	/*
+	 * Klik za prikaz poti
+	 */
 	@Override
 	public void onInfoWindowClick(Marker m) {
 		LatLng pos = m.getPosition();
-		double lat = pos.latitude, lng = pos.longitude;
 		
 		Intent intent = new Intent(this, PotActivity.class);
-		intent.putExtra("lat", lat);
-		intent.putExtra("lng", lng);
+		intent.putExtra("lat", pos.latitude);
+		intent.putExtra("lng", pos.longitude);
 		startActivity(intent);
 	}
 

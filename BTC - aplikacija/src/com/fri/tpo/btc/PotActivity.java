@@ -27,11 +27,11 @@ import com.google.android.gms.maps.model.MarkerOptions;
 public class PotActivity extends Activity implements LocationListener, ConnectionCallbacks, OnConnectionFailedListener {
 	
 	private GoogleMap map;
-	private Directions directions;
-	private LocationClient location;
+	private Directions directions; // navodila za pot
+	private LocationClient location; // vracanje trenutne lokacije
 	private LocationRequest locRequest;
 
-	private LatLng end;
+	private LatLng end; // koncni cilj
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +41,7 @@ public class PotActivity extends Activity implements LocationListener, Connectio
 		directions = new Directions();
 		
 		try {
-			map = MapHelper.inicializirajZemljevid(this, R.id.mapPot);
+			map = MapHelper.initMap(this, R.id.mapPot);
 			map.setMyLocationEnabled(true);
 			
 			// lokacija cilja
@@ -62,15 +62,16 @@ public class PotActivity extends Activity implements LocationListener, Connectio
 		}
 	}
 	
-	// ob spremembi pozicije
+	/*
+	 * Sprememba pozicije
+	 */
 	@Override
 	public void onLocationChanged(Location l) {
 		LatLng pos = new LatLng(l.getLatitude(), l.getLongitude());
-		pos = MapHelper.ZACETEK; // HACK POBRISI - ZA DEBUG ---------------------------------------------------------------------------------------------------
+		pos = MapHelper.ZACETEK; // TODO: POBRISI - SAMO ZA DEBUG -------------------------------------------------------
 		// preveri ce je kamera znotraj mej
 		if (MapHelper.BOUNDS.contains(pos)) {
-			String url = String.format("http://maps.googleapis.com/maps/api/directions/json?origin=%s,%s&destination=%s,%s&sensor=true&mode=walking", 
-					pos.latitude, pos.longitude, end.latitude, end.longitude);
+			String url = MapHelper.getDirectionsURL(pos.latitude, pos.longitude, end.latitude, end.longitude);
 
 			// stanje taska v ozadju
 			if (directions.getStatus() == Status.FINISHED)
@@ -87,24 +88,23 @@ public class PotActivity extends Activity implements LocationListener, Connectio
 	
 	@Override
 	public void onConnected(Bundle arg0) {
-		Toast.makeText(getApplicationContext(), "Povezava uspesna!", Toast.LENGTH_SHORT).show();
+		Toast.makeText(getApplicationContext(), "GPS povezan!", Toast.LENGTH_SHORT).show();
 		location.requestLocationUpdates(locRequest, this);
 	}
 	
 	@Override
 	public void onConnectionFailed(ConnectionResult arg0) {
-		Toast.makeText(getApplicationContext(), "Povezava neuspesna!", Toast.LENGTH_SHORT).show();
+		Toast.makeText(getApplicationContext(), "GPS ni povezan!", Toast.LENGTH_SHORT).show();
 	}
 	
 	@Override
 	public void onDisconnected() {
-		Toast.makeText(getApplicationContext(), "Povezava prekinjena!", Toast.LENGTH_SHORT).show();
+		Toast.makeText(getApplicationContext(), "GPS prekinjen!", Toast.LENGTH_SHORT).show();
 	}
 	
 	@Override
 	protected void onStart() {
 		super.onStart();
-		
 		location.connect();
 	}
 	
@@ -117,23 +117,19 @@ public class PotActivity extends Activity implements LocationListener, Connectio
 		super.onStop();
 	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.pot, menu);
-		return true;
-	}
-	
+	/*
+	 * Izris poti na zemljevid s podanim JSON-om
+	 */
 	private void izrisiPot(String json) {
 		// doda crto na zemljevid
-		if (json != null) {
-			map.clear();
-			map.addPolyline(MapHelper.parseDirections(json));
-			map.addMarker(new MarkerOptions().position(end));
-		}
+		map.clear();
+		map.addPolyline(MapHelper.parseDirections(json));
+		map.addMarker(new MarkerOptions().position(end));
 	}
 	
-	// dobi navodila za pot na drugi niti iz streznika
+	/* 
+	 * Vracanje navodil za pot na drugi niti
+	 */
 	private class Directions extends AsyncTask<String, Void, String> {
 		@Override
 		protected String doInBackground(String... urls) {
@@ -154,9 +150,17 @@ public class PotActivity extends Activity implements LocationListener, Connectio
 		
 		@Override
 		protected void onPostExecute(String result) {
-			izrisiPot(result);
+			if (result != null && !result.equals(""))
+				izrisiPot(result);
 			super.onPostExecute(result);
 		}
 	}
 
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// Inflate the menu; this adds items to the action bar if it is present.
+		getMenuInflater().inflate(R.menu.pot, menu);
+		return true;
+	}
+	
 }

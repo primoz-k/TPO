@@ -8,11 +8,25 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".TrgovinaActivity" >
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:background="#bbb"
+        android:padding="1dp" 
+        android:layout_toRightOf="@+id/linearLayout1">
+
+        <fragment
+            android:id="@+id/mapTrgovina"
+            android:name="com.google.android.gms.maps.MapFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </RelativeLayout>
+
     <LinearLayout
         android:id="@+id/linearLayout1"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_centerHorizontal="true"
         android:orientation="vertical" >
 
         <LinearLayout
@@ -105,21 +119,6 @@
                 android:layout_marginLeft="10dp"/>
 
         </LinearLayout>
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" 
-            android:background="#bbb"
-            android:padding="1dp"
-            android:layout_marginTop="16dp">
-
-            <fragment
-                android:id="@+id/mapTrgovina"
-                android:name="com.google.android.gms.maps.MapFragment"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-
-        </RelativeLayout>
 
     </LinearLayout>
 

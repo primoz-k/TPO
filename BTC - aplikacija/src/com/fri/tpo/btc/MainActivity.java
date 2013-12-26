@@ -4,11 +4,12 @@ import java.util.HashMap;
 import java.util.List;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
+import android.util.SparseArray;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
@@ -19,57 +20,49 @@ import com.google.android.gms.maps.model.Polygon;
 import com.google.android.gms.maps.model.PolygonOptions;
 
 public class MainActivity extends Activity implements OnMapClickListener {
-	private DatabaseConnector db;
 	
 	private GoogleMap map; // glavni zemljevid
-	private HashMap<Integer, Polygon> obrisi; // obrisi hal (ID -> OBRIS)
+	private SparseArray<Polygon> polygons; // obrisi hal (ID -> OBRIS)
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		
-		db = new DatabaseConnector(this);
-
 	    // inicializacija zemljevida
 	    try {
-            map = MapHelper.inicializirajZemljevid(this, R.id.map);
+            map = MapHelper.initMap(this, R.id.map);
             map.setOnMapClickListener(this);
-            ustvariPoligone();
+            makePolygons();
         } catch (Exception e) {
             Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
         }
 	}
 	
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.main, menu);
-		return true;
+	/*
+	 * KLIK na gumb za iskanje trgovin
+	 */
+	public void findShops(View v) {
+		this.startActivity(new Intent(this, IskanjeActivity.class));
 	}
 	
-	// iskanje trgovin
-	public void iskanjeTrgovin(View v) {
-		// odpre aktivnost za iskanje trgovin brez id-ja (vse hale)
-		Intent intent = new Intent(this, IskanjeActivity.class);
-		this.startActivity(intent);
-	}
-	
-	// iskanje tock interesa
-	public void iskanjePOI(View v) {
-		// odpre aktivnost za iskanje tock interesa
-		Intent intent = new Intent(this, IskanjePOIActivity.class);
-		this.startActivity(intent);
+	/*
+	 * KLIK na gumb za iskanje tock interesa
+	 */
+	public void findPOI(View v) {
+		this.startActivity(new Intent(this, IskanjePOIActivity.class));
 	}
     
-    // ustvarjanje poligonov za hale
-    private void ustvariPoligone() {
+	/*
+	 * Ustvarjanje poligonov za vsako halo v bazi
+	 */
+    private void makePolygons() {
         // inicializacija in izris poligonov za vse hale
-        obrisi = new HashMap<Integer, Polygon>();
+    	DatabaseConnector db = new DatabaseConnector(this);
+        polygons = new SparseArray<Polygon>();
         DataTable hale = db.getDataTable("SELECT IDHale FROM Hala");
         for (String id : hale.getColumn("IDHale")) {
-        	PolygonOptions poly = new PolygonOptions();
-        	poly.strokeWidth(0).fillColor(Color.argb(80, 255, 0, 0));
+        	PolygonOptions poly = MapHelper.getOutline();
         	
         	// preberemo tocke iz baze
         	DataTable obrisiLok = db.getDataTable("SELECT LokacijaLat, LokacijaLong FROM Obris WHERE IDHale = " + id);
@@ -86,28 +79,30 @@ public class MainActivity extends Activity implements OnMapClickListener {
         	}
         	
         	// dodamo obrise v array za racunanje dotikov
-        	obrisi.put(Integer.parseInt(id), map.addPolygon(poly));
+        	polygons.put(Integer.parseInt(id), map.addPolygon(poly));
         }
     }
     
-    // klik na zemljevid
+    /*
+     * Klik na zemljevid
+     */
     @Override
     public void onMapClick(LatLng klik) {
-    	Log.i("Klik", "klik na karto " + klik.toString());
-    	
-    	for (int id : obrisi.keySet()) {
-    		if (vsebuje(obrisi.get(id), klik)) {
-    			// odpre aktivnost za halo
+    	// sprehod cez vse obrise hal
+    	for (int i = 0; i < polygons.size(); i++)
+    		if (contains(polygons.valueAt(i), klik)) {
+    			// odpre aktivnost za halo s pravim IDjem
     			Intent intent = new Intent(this, IskanjeActivity.class);
-    			intent.putExtra("id", id);
+    			intent.putExtra("id", polygons.keyAt(i));
     			this.startActivity(intent);
     			break;
     		}
-    	}
     }
     
-    // ali je izbrana tocka v poligonu
-    private boolean vsebuje(Polygon poly, LatLng point) {
+    /*
+     * Ali izbran poligon vsebuje tocko
+     */
+    private boolean contains(Polygon poly, LatLng point) {
 		int i, j;
 		List<LatLng> points = poly.getPoints();
 		boolean result = false;
@@ -117,6 +112,34 @@ public class MainActivity extends Activity implements OnMapClickListener {
 			      (point.latitude < (points.get(j).latitude - points.get(i).latitude) * (point.longitude - points.get(i).longitude) / (points.get(j).longitude - points.get(i).longitude) + points.get(i).latitude))
 				result = !result;
 		return result;
+    }
+    
+    @Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getMenuInflater().inflate(R.menu.main, menu);
+		return true;
+	}
+    
+    /*
+     * Klik na menu
+     */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+    	switch (item.getItemId()) {
+    	case R.id.about_settings:
+    		AlertDialog about = new AlertDialog.Builder(this).create();
+    		about.setTitle("Avtorji aplikacije:");
+    		about.setMessage("Denis Korinsek (63110055)\nPrimoz Kerin (63110015)\nMatej Biberovic (63110100)");
+    		about.show();
+    		return true;
+    	case R.id.navodila_settings:
+    		AlertDialog instr = new AlertDialog.Builder(this).create();
+    		instr.setTitle("Navodila za uporabo:");
+    		instr.setMessage("TODO!");
+    		instr.show();
+    		return true;
+    	}
+    	return super.onOptionsItemSelected(item);
     }
 
 }

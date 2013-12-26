@@ -12,6 +12,9 @@ import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.TextView;
  
+/*
+ * Expandable list adapter za nalaganje baze v listview s podskupinami
+ */
 public class ExpandableListAdapter extends BaseExpandableListAdapter {
  
     private Activity context;
