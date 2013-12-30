@@ -96,11 +96,76 @@ INSERT INTO Kategorija VALUES (25, 'Živali');
 
 -- Trgovina(IDTrgovine, IDHale, ImeTrgovine, Telefon, Email, SpetnaStran, PonPetOd, PonPetDo, SobOd, SobDo, NedOd, NedDo)
 -- obratovalni cas je lahko tut NULL
-INSERT INTO Trgovina VALUES (1, 1, '7 Camicie', '01/755 62 32', '/', '7camicie.com' , '09:00','21:00','08:00','21:00','08:00','15:00');
-INSERT INTO Trgovina VALUES (2, 1, '', '', '', '', '','','','','','');
-INSERT INTO Trgovina VALUES (3, 1, '', '', '', '', '','','','','','');
-INSERT INTO Trgovina VALUES (4, 1, '', '', '', '', '','','','','','');
--- ...
+INSERT INTO Trgovina VALUES (1, 1, 'Accessorize', '01/320 08 45', 'accessorize.lj1@acron-trgovina.si', 'http://www.acron-trgovina.si/', '09:00', '21:00', '08:00', '21:00', '09:00', '15:00');
+INSERT INTO Trgovina VALUES (2, 1, 'Adidas', '01/320 81 40', 'adidasshop-ljubljana@afp.si', '/', '09:00', '21:00', '08:00', '21:00', '09:00', '15:00');
+INSERT INTO Trgovina VALUES (3, 1, 'After Leonardo', '01/547 10 92', 'after.citypark@leonardo.si', 'http://www.leonardo.si', '09:00', '21:00', '08:00', '21:00', '09:00', '15:00');
+INSERT INTO Trgovina VALUES (4, 1, 'Art', '01/541 00 46', 'info@art-lj.si', 'http://www.art-lj.si', '09:00', '21:00', '08:00', '21:00', '09:00', '15:00');
+INSERT INTO Trgovina VALUES (5, 1, 'Bags&More', '01 620 87 36', 'Bags.morelj5@acron-trgovina.si', 'http://www.acron-trgovina.si/', '09:00', '20:00', '09:00', '20:00', '', '');
+INSERT INTO Trgovina VALUES (6, 1, 'Bata Superstore', '051/658 562', 'bata.citypark@sportina.si', 'http://www.sportina.si', '09:00', '21:00', '08:00', '21:00', '09:00', '15:00');
+INSERT INTO Trgovina VALUES (7, 1, 'bauMax', '01/548 44 44', 'info-si@baumax.com', 'http://www.baumax.si', '09:00', '21:00', '08:00', '21:00', '09:00', '15:00');
+INSERT INTO Trgovina VALUES (8, 1, 'Bazilica - zel', '01/541 00 54', 'bazilica.zel@gmail.com', 'http://www.bazilica.com', '09:00', '21:00', '08:00', '21:00', '09:00', '15:00');
+INSERT INTO Trgovina VALUES (9, 1, 'Big Bang', '01/520 09 00', 'potrosniki@bigbang.si', 'http://bigbang.si', '09:00', '21:00', '08:00', '21:00', '09:00', '15:00');
+INSERT INTO Trgovina VALUES (10, 1, 'Camper', '059 07 56 63', 'camper.city@cloudy.si', '/', '09:00', '20:00', '09:00', '20:00', '', '');
+INSERT INTO Trgovina VALUES (11, 1, 'Comma', '01/520 11 91', 'cityparkcomma@soliver.si', 'http://www.comma-fashion.com', '09:00', '21:00', '08:00', '21:00', '09:00', '15:00');
+INSERT INTO Trgovina VALUES (12, 1, 'Crocs', '0599/577 37', 'crocs.citypark@gmail.com', '/', '09:00', '21:00', '08:00', '21:00', '09:00', '15:00');
+INSERT INTO Trgovina VALUES (13, 1, 'Deichmann', '01/ 520 13 71', 'deichmann-obutev@deichmann.com', 'http://www.deichmann.si', '09:00', '21:00', '08:00', '21:00', '09:00', '15:00');
+INSERT INTO Trgovina VALUES (14, 1, 'Diddl Shop', '0599 / 26 192', 'info@diddlshop.si', 'www.diddlshop.si', '09:00', '21:00', '08:00', '21:00', '09:00', '15:00');
+INSERT INTO Trgovina VALUES (15, 1, 'Direndaj', '01/ 620 77 46', 'direndaj.ljubljana-city@orbico.si', 'http://www.direndaj.si', '09:00', '21:00', '08:00', '21:00', '09:00', '15:00');
+INSERT INTO Trgovina VALUES (16, 1, 'DM Drogerie markt', '01/5415300', 'info@dm-drogeriemarkt.si', 'http://www.dm-drogeriemarkt.si', '09:00', '20:00', '09:00', '20:00', '', '');
+INSERT INTO Trgovina VALUES (17, 1, 'Dollar', '01/520 93 00', 'trgovina.ljubljana@dollar.si', 'http://www.dollar.si', '09:00', '21:00', '08:00', '21:00', '09:00', '15:00');
+INSERT INTO Trgovina VALUES (18, 1, 'Florentina dežela balonov', '041 412 162', 'florentina@siol.net', 'http://www.florentina.si ', '09:00', '20:00', '09:00', '20:00', '', '');
+INSERT INTO Trgovina VALUES (19, 1, 'G-Star', '051/658 517', 'gstar.citypark@sportina.si', 'http://www.sportina.si', '09:00', '21:00', '08:00', '21:00', '09:00', '15:00');
+INSERT INTO Trgovina VALUES (20, 1, 'Guess Accessories Store', '0599/28 876', 'guessbtc@sanis.si', 'https://www.facebook.com/guess.l....', '', '', '', '', '', '');
+INSERT INTO Trgovina VALUES (21, 1, 'H&M', '01/547 18 60', '/', '/', '09:00', '21:00', '08:00', '21:00', '09:00', '15:00');
+INSERT INTO Trgovina VALUES (22, 1, 'Hervis', '01/587 48 10', 'hm08-300.ljubljana@hervis.si', 'http://www.hervis.si', '09:00', '21:00', '08:00', '21:00', '09:00', '15:00');
+INSERT INTO Trgovina VALUES (23, 1, 'Hiša čokolade Rustika', '01/430 17 94', 'cokoladnica_lj@rustika.eu', '/', '09:00', '21:00', '08:00', '21:00', '09:00', '15:00');
+INSERT INTO Trgovina VALUES (24, 1, 'Humanic', '01/524 00 37', 'bracic.petra@lsag.com', 'http://www.shoemanic.com', '09:00', '21:00', '08:00', '21:00', '09:00', '15:00');
+INSERT INTO Trgovina VALUES (25, 1, 'iStore', '/', 'istore@fmc.si', 'http://www.i-store.si', '09:00', '21:00', '08:00', '21:00', '09:00', '15:00');
+INSERT INTO Trgovina VALUES (26, 1, 'Kastner&Ohler', '01/ 755 47 01', 'kontakt@kastner-oehler.si', 'http://www.kastner-oehler.si', '09:00', '21:00', '08:00', '21:00', '09:00', '15:00');
+INSERT INTO Trgovina VALUES (27, 1, 'Kelih', '01/541 18 18', '/', '/', '09:00', '21:00', '08:00', '21:00', '09:00', '15:00');
+INSERT INTO Trgovina VALUES (28, 1, 'Leonardo', '01/547 10 90', 'leonardo@leonardo-ce.si', '/', '09:00', '21:00', '08:00', '21:00', '09:00', '15:00');
+INSERT INTO Trgovina VALUES (29, 1, 'Limoni', '01/523 35 31', 'cityparklj@limoni.si', '/', '09:00', '21:00', '08:00', '21:00', '09:00', '15:00');
+INSERT INTO Trgovina VALUES (30, 1, 'L-Occitane', '01/523 34 66', 'info@loccitane.si', 'http://www.loccitane.si', '09:00', '21:00', '08:00', '21:00', '09:00', '15:00');
+INSERT INTO Trgovina VALUES (31, 1, 'Marks & Spencer', '01/520 49 00', 'marinopoulos@siol.net', 'http://www.marksandspencer.com', '09:00', '21:00', '08:00', '21:00', '09:00', '15:00');
+INSERT INTO Trgovina VALUES (32, 1, 'Megamarket Interspar', '01/587 30 10', 'im.01@spar.si', 'http://www.spar.si', '09:00', '21:00', '08:00', '21:00', '09:00', '15:00');
+INSERT INTO Trgovina VALUES (33, 1, 'Melvita', '01/320 48 47', 'info@melvita.si', 'http://www.melvita.si', '09:00', '21:00', '09:00', '21:00', '09:00', '15:00');
+INSERT INTO Trgovina VALUES (34, 1, 'Mladinska knjiga trgovina', '01 520 81 61', 'skupnicitypark@mk-trgovina.si', 'http://www.mk-trgovina.si', '09:00', '21:00', '08:00', '21:00', '09:00', '15:00');
+INSERT INTO Trgovina VALUES (35, 1, 'Mura', '01/547 29 90', '/', 'http://www.mura.si', '09:00', '21:00', '08:00', '21:00', '09:00', '15:00');
+INSERT INTO Trgovina VALUES (36, 1, 'Naracamicie', '/', 'info@naracamicie.si', 'http://naracamicie.si', '09:00', '21:00', '08:00', '21:00', '09:00', '15:00');
+INSERT INTO Trgovina VALUES (37, 1, 'New Yorker', '01/548 35 91', '/', '/', '09:00', '21:00', '08:00', '21:00', '09:00', '15:00');
+INSERT INTO Trgovina VALUES (38, 1, 'Okaidi', '/', '/', '/', '09:00', '21:00', '08:00', '21:00', '09:00', '15:00');
+INSERT INTO Trgovina VALUES (39, 1, 'Orsay', '051/658 518', 'Orsay.citypark@sportina.si', 'http://www.sportina.si', '09:00', '21:00', '08:00', '21:00', '09:00', '15:00');
+INSERT INTO Trgovina VALUES (40, 1, 'Palmers', '01/523 35 28', 'palmers-citypark@krokodil.si', 'http://www.krokodil.si', '09:00', '21:00', '08:00', '21:00', '09:00', '15:00');
+INSERT INTO Trgovina VALUES (41, 1, 'Promod', '/', '/', '/', '09:00', '20:00', '09:00', '20:00', '', '');
+INSERT INTO Trgovina VALUES (42, 1, 'Rifle', '01/541 95 20', '/', '/', '09:00', '21:00', '08:00', '21:00', '09:00', '15:00');
+INSERT INTO Trgovina VALUES (43, 1, 's.Oliver', '01/520 11 92', 'citypark@soliver.si', 'http://www.soliver.de', '09:00', '21:00', '08:00', '21:00', '09:00', '15:00');
+INSERT INTO Trgovina VALUES (44, 1, 's.Oliver Junior', '01/520 11 90', 'cityparkkids@soliver.si', 'http://www.soliver.de', '09:00', '21:00', '08:00', '21:00', '09:00', '15:00');
+INSERT INTO Trgovina VALUES (45, 1, 's.Oliver Selection', '01 520 11 92', 'cityparkselection@soliver.si', 'http://www.soliver.si', '09:00', '20:00', '09:00', '20:00', '', '');
+INSERT INTO Trgovina VALUES (46, 1, 'Sanolabor', '01/521 12 88', 'mp.lj-citypark@sanolabor.si', '/', '09:00', '21:00', '08:00', '21:00', '09:00', '15:00');
+INSERT INTO Trgovina VALUES (47, 1, 'Sariko', '01 / 236 20 28', '/', '/', '09:00', '20:00', '09:00', '20:00', '', '');
+INSERT INTO Trgovina VALUES (48, 1, 'Six', '051/658 523', 'six.citypark@sportina.si', 'http://www.sportina.si', '09:00', '21:00', '08:00', '21:00', '09:00', '15:00');
+INSERT INTO Trgovina VALUES (49, 1, 'Sten time', '01/546 52 13', 'info@sten.si', 'http://www.sten.si', '09:00', '21:00', '08:00', '21:00', '09:00', '15:00');
+INSERT INTO Trgovina VALUES (50, 1, 'Sten Time Exclusive', '030/321 121', 'info@sten.si', 'http://www.sten.si', '09:00', '21:00', '08:00', '21:00', '09:00', '15:00');
+INSERT INTO Trgovina VALUES (51, 1, 'Stenders', '01 / 620 87 78', 'prodaja@stenders.si', 'http://www.stenders.si', '09:00', '20:00', '09:00', '20:00', '', '');
+INSERT INTO Trgovina VALUES (52, 1, 'Swarovski', '01/523 34 90', '/', '/', '09:00', '21:00', '08:00', '21:00', '09:00', '15:00');
+INSERT INTO Trgovina VALUES (53, 1, 'Swatch', '/', 'info@sten.si', 'http://www.sten.si', '09:00', '21:00', '08:00', '21:00', '09:00', '15:00');
+INSERT INTO Trgovina VALUES (54, 1, 'Tally Weijl', '051/658 577', 'TW.citypark@sportina.si', 'http://www.sportina.si', '09:00', '21:00', '08:00', '21:00', '09:00', '15:00');
+INSERT INTO Trgovina VALUES (55, 1, 'Tele Mobiltel', '01/523 34 63', '/', '/', '09:00', '21:00', '08:00', '21:00', '09:00', '15:00');
+INSERT INTO Trgovina VALUES (56, 1, 'Telekom Slovenije', '01/541 05 00', '/', 'http://www.telekom.si', '09:00', '21:00', '08:00', '21:00', '09:00', '15:00');
+INSERT INTO Trgovina VALUES (57, 1, 'Tisoč in en dar', '01/541 17 30', 'info@pro-92.si', 'http://www.tisocinendar.si', '09:00', '21:00', '08:00', '21:00', '09:00', '15:00');
+INSERT INTO Trgovina VALUES (58, 1, 'Tkanina', '01/541 00 42', 'tkanina.cermelj@siol.net', '/', '09:00', '21:00', '08:00', '21:00', '09:00', '15:00');
+INSERT INTO Trgovina VALUES (59, 1, 'Toko', '01/524 00 31', 'Pe10@toko.si', 'http://www.toko.si', '09:00', '21:00', '08:00', '21:00', '09:00', '15:00');
+INSERT INTO Trgovina VALUES (60, 1, 'Tom Tailor', '051/658 546', 'TomTailor.citypark@sportina.si', 'http://www.sportina.si', '09:00', '21:00', '08:00', '21:00', '09:00', '15:00');
+INSERT INTO Trgovina VALUES (61, 1, 'Tomas sport', '01/523 34 98', 'spar.ts@amis.net', '/', '09:00', '21:00', '08:00', '21:00', '09:00', '15:00');
+INSERT INTO Trgovina VALUES (62, 1, 'Transport', '/', 'transport-btc@t-2.net', 'http://www.transportshoes.com', '09:00', '21:00', '08:00', '21:00', '09:00', '15:00');
+INSERT INTO Trgovina VALUES (63, 1, 'Triumph', '01 / 54 11 761', 'triumph.lj-citypark@siol.net', 'http://www.triumph.si', '09:00', '21:00', '08:00', '21:00', '09:00', '15:00');
+INSERT INTO Trgovina VALUES (64, 1, 'Two way', '01/ 511 64 49', 'citypark@twoway.si', 'http://www.twoway.si', '09:00', '21:00', '08:00', '21:00', '09:00', '15:00');
+INSERT INTO Trgovina VALUES (65, 1, 'Vinoteka Istenič', '/', 'office@istenic.si', 'http://www.istenic.si', '09:00', '21:00', '08:00', '21:00', '09:00', '15:00');
+INSERT INTO Trgovina VALUES (66, 1, 'Vovko', '01/523 35 13', 'citypark@vovko.si', 'http://www.vovko.si', '09:00', '21:00', '08:00', '21:00', '09:00', '15:00');
+INSERT INTO Trgovina VALUES (67, 1, 'xyz', '051/658 535', 'xyz.citypark@sportina.si', 'http://www.xyzstyleideas.com', '09:00', '21:00', '08:00', '21:00', '09:00', '15:00');
+INSERT INTO Trgovina VALUES (68, 1, 'Zootic', '01/541 02 57', 'zootic.citypark@zootic.si', 'http://www.zootic.si', '09:00', '21:00', '08:00', '21:00', '09:00', '15:00');
+
+-- DONE Hala CityPark
 
 -- KategorijaTrgovine(IDTrgovine, IDKategorije)
 INSERT INTO KategorijaTrgovine VALUES (1, 1);

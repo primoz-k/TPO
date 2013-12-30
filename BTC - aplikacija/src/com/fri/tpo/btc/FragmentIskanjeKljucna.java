@@ -69,7 +69,7 @@ public class FragmentIskanjeKljucna extends Fragment implements OnItemClickListe
 		DatabaseConnector db = new DatabaseConnector(getActivity());
 		 
 		// vse trgovino v doloceni hali/vseh halah
-		String query = String.format("SELECT IDTrgovine as _id, * FROM Trgovina WHERE ImeTrgovine LIKE '%s' %s ORDER BY ImeTrgovine;", 
+		String query = String.format("SELECT IDTrgovine as _id, * FROM Trgovina WHERE ImeTrgovine LIKE '%s%%' %s ORDER BY ImeTrgovine;", 
 				kljucna, idHale != -1 ? "AND IDHale = " + idHale : "");
 
         Cursor cursor = db.getCursor(query);

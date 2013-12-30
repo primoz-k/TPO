@@ -20,7 +20,7 @@ public class DatabaseConnector extends SQLiteOpenHelper {
 	private boolean upgraded = false; // ali je baza posodobljena
 
 	public DatabaseConnector(Context context) {
-		super(context, DB_NAME, null, 5); // TODO ZA UPGRADE BAZE POVECAJ TO STEVILO
+		super(context, DB_NAME, null, 7); // TODO ZA UPGRADE BAZE POVECAJ TO STEVILO
 		this.myContext = context;
 
 		// na zacetku ustvari bazo / posodobi bazo
