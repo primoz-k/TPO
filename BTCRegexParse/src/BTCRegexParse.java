@@ -14,26 +14,26 @@ public class BTCRegexParse {
 	public static void main(String[] args) {
 		//System.out.println(getUrlSource("http://www.btc-city.com/menu-trgovine/trgovine"));
 		
-		// String to be scanned to find the pattern.
+		trgovineVHali("Citypark", 1, 1);
+	}
+	
+	private static void trgovineVHali(String hala, int idHale, int index) {
 		String line = getUrlSource("http://www.btc-city.com/menu-trgovine/trgovine");
-		String pattern = "<a href=\"([^\"]*)\">.*\">Citypark";
-		// Create a Pattern object
-		Pattern r = Pattern.compile(pattern);
+		String pattern = "<a href=\"([^\"]*)\">.*\">" + hala;
 
-		// Now create matcher object.
-		Matcher m = r.matcher(line);
-		
+		// url-ji trgovin v podani hali
+		Matcher m = Pattern.compile(pattern).matcher(line);
 		ArrayList<String> shops = new ArrayList<String>();
 		while (m.find()) {
 			String url = getUrlSource("http://www.btc-city.com" + m.group(1));
 			shops.add(url);
 		}
-		
-		int index = 1;
+
+		// izpis za vsako trgovino
 		for (String url : shops) {
 			String ime, tel, email, www, ponPetOd = "", ponPetDo = "", sobOd = "", sobDo = "", nedOd = "", nedDo = "";
 			// ime trgovine
-			m = Pattern.compile("<p>([\\w\\sčšž&;\\.-]*)</p>").matcher(url);
+			m = Pattern.compile("<p>([\\w\\sčšžČŠŽ&;\\.-]*)</p>").matcher(url);
 			ime = m.find() ? m.group(1) : "/";
 			// tel trgovine
 			m = Pattern.compile("<p>([0-9/ ]*)</p>").matcher(url);
@@ -62,12 +62,24 @@ public class BTCRegexParse {
 				nedDo = m.group(2);
 			}
 			
-			//System.out.println(String.format("%s (%s): \n%s\n%s\npon - pet: %s - %s\nsob: %s - %s\nned: %s - %s\n", 
-			//		ime, tel, email, www, ponPetOd, ponPetDo, sobOd, sobDo, nedOd, nedDo));
-			//Trgovina(IDTrgovine, IDHale, ImeTrgovine, Telefon, Email, SpetnaStran, PonPetOd, PonPetDo, SobOd, SobDo, NedOd, NedDo)
-			String insert = String.format("INSERT INTO Trgovina VALUES (%d, 1, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s');", 
-					index++, ime, tel, email, www, ponPetOd, ponPetDo, sobOd, sobDo, nedOd, nedDo);
+			// INSERT trgovina
+			String insert = String.format("INSERT INTO Trgovina VALUES " +
+					"(%d, %s, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s');", 
+					index, idHale, ime, tel, email, www, ponPetOd, ponPetDo, sobOd, sobDo, nedOd, nedDo);
 			System.out.println(insert);
+			
+			// INSERT kategorija
+			m = Pattern.compile("([\\w čšžČŠŽ;&-]+)</li>").matcher(url);
+			while (m.find()) {
+				String val = m.group(1).trim().replace("amp;", "");
+				if (val.length() == 0 || val.equals("&nbsp;"))
+					continue;
+				insert = String.format("INSERT INTO KategorijaTrgovine VALUES (%d, ); -- %s", index, val);
+				System.out.println(insert);
+			}
+			
+			// naslednja trgovina
+			index++;
 		}
 	}
 	

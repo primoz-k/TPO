@@ -4,9 +4,10 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -14,7 +15,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 
-public class FragmentIskanjeKljucna extends Fragment implements OnItemClickListener, OnClickListener {
+public class FragmentIskanjeKljucna extends Fragment implements OnItemClickListener {
 
 	private ListView lv_kljucna;
 	private EditText et_vnosIskanja;
@@ -30,9 +31,20 @@ public class FragmentIskanjeKljucna extends Fragment implements OnItemClickListe
 			Bundle savedInstanceState) {
 		View rootView = inflater.inflate(R.layout.fragment_iskanje_kljucna, container, false);
 		// klik na gumb
-		rootView.findViewById(R.id.bt_isci).setOnClickListener(this);
+		//rootView.findViewById(R.id.bt_isci).setOnClickListener(this);
 		
 		et_vnosIskanja = (EditText)rootView.findViewById(R.id.et_vnosIskanja);
+		// ob spremembi teksta avtomatsko iskanje
+		et_vnosIskanja.addTextChangedListener(new TextWatcher() {
+			@Override
+			public void onTextChanged(CharSequence s, int arg1, int arg2, int arg3) {
+				isci(s.toString());
+			}
+			@Override
+			public void beforeTextChanged(CharSequence s, int arg1, int arg2, int arg3) { }
+			@Override
+			public void afterTextChanged(Editable s) { }
+		});
 		lv_kljucna = (ListView)rootView.findViewById(R.id.lv_kljucna);
 		
 		idHale = getArguments().getInt("id");
@@ -51,15 +63,6 @@ public class FragmentIskanjeKljucna extends Fragment implements OnItemClickListe
 		Intent intent = new Intent(getActivity(), TrgovinaActivity.class);
 		intent.putExtra("id", (int)id);
 		this.startActivity(intent);
-	}
-	
-	/*
-	 * Klik na gumb za iskanje
-	 */
-	@Override
-	public void onClick(View v) {
-		// iskanje po kljucni besedi
-		isci(et_vnosIskanja.getText().toString());
 	}
 	
 	/*

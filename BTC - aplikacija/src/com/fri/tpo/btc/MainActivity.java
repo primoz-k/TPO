@@ -129,13 +129,16 @@ public class MainActivity extends Activity implements OnMapClickListener {
     	case R.id.about_settings:
     		AlertDialog about = new AlertDialog.Builder(this).create();
     		about.setTitle("Avtorji aplikacije:");
-    		about.setMessage("Denis Korinsek (63110055)\nPrimoz Kerin (63110015)\nMatej Biberovic (63110100)");
+    		about.setMessage("Denis Korinšek (63110055)\nPrimož Kerin (63110015)\nMatej Biberovič (63110100)");
     		about.show();
     		return true;
     	case R.id.navodila_settings:
     		AlertDialog instr = new AlertDialog.Builder(this).create();
     		instr.setTitle("Navodila za uporabo:");
-    		instr.setMessage("TODO!");
+    		instr.setMessage("Za iskanje vseh trgovin pritisni na ikono za iskanje (levo). " +
+    				"Za iskanje trgovin v določeni hali pritisni na obris hale na zemljevidu.\n" +
+    				"Za iskanje točk interesa pritisni ikono za prikaz točk (desno). " +
+    				"Ob kliku na določeno točko se vam prikaže pot do te točke.");
     		instr.show();
     		return true;
     	}

@@ -14,29 +14,15 @@
         android:layout_height="wrap_content"
         android:orientation="vertical" >
 
-        <LinearLayout
+        <EditText
+            android:id="@+id/et_vnosIskanja"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
+            android:layout_height="wrap_content"
+            android:ems="10" 
+            android:inputType="text"
+            android:hint="Vnesite ime trgovine">
 
-            <EditText
-                android:id="@+id/et_vnosIskanja"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:ems="10" 
-                android:inputType="text"
-                android:hint="Ime trgovine">
-
-            </EditText>
-
-            <Button
-                android:id="@+id/bt_isci"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Iskanje" />
-
-        </LinearLayout>
+        </EditText>
 
         <ListView
             android:id="@+id/lv_kljucna"
