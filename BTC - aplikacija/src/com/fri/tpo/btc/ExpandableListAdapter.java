@@ -6,6 +6,7 @@ import java.util.Map;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Typeface;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,7 +35,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
  
     public long getChildId(int groupPosition, int childPosition) {
     	String child = (String) getChild(groupPosition, childPosition);
-    	int childId = Integer.parseInt(child.split(";")[1]);
+    	int childId = Integer.parseInt(child.split("\\|")[1]);
         return childId;
     }
  
@@ -47,7 +48,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         }
  
         TextView item = (TextView) convertView.findViewById(R.id.child);
-        child = child.split(";")[0];
+        child = child.split("\\|")[0];
         item.setText(child);
         return convertView;
     }

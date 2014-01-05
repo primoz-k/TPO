@@ -51,10 +51,6 @@
             android:value="@integer/google_play_services_version" />
 
         <activity
-            android:name="com.fri.tpo.btc.HalaActivity"
-            android:label="@string/title_activity_hala" >
-        </activity>
-        <activity
             android:name="com.fri.tpo.btc.IskanjeActivity"
             android:label="@string/title_activity_iskanje"
             android:parentActivityName="com.fri.tpo.btc.MainActivity" >

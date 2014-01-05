@@ -44,7 +44,7 @@ public class FragmentIskanjeKategorije extends Fragment implements OnChildClickL
         dt = db.getDataTable(query);
         for (HashMap<String, String> row : dt.getRows()) {
         	ArrayList<String> l = (ArrayList)kat.get(row.get("ImeKategorije"));
-        	l.add(row.get("ImeTrgovine")+";"+row.get("IDTrgovine"));
+        	l.add(row.get("ImeTrgovine") + "|" + row.get("IDTrgovine")); // XXX hack za locevanje, raje mu podaj se en array, oz PAIR
         	kat.put(row.get("ImeKategorije"), l);
         }
         
