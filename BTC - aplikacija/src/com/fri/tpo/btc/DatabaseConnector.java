@@ -84,6 +84,7 @@ public class DatabaseConnector extends SQLiteOpenHelper {
 	@Override
 	public void onCreate(SQLiteDatabase arg0) {
 		Log.i("info", "klic onCreate");
+		upgraded = true;
 	}
 
 	@Override
